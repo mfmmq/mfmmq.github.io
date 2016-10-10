@@ -41,27 +41,94 @@
 									<p> <a href="mailto:maya@mqiu.uk">maya@mqiu.uk</a></p>
 								</header>
 								
-								<footer>
+								<footer>									
 									<ul class="icons">
 										<li><a href="mailto:maya@mqiu.uk" class="fa-envelope">Email</a></li>
 										<li><a href="#" class="fa-angle-double-down" id="downarrow">Down</a></li>
 										<li><a href="#" class="fa-linkedin" id="linkedin">Linked In</a></li>
 									</ul>
+									<div id="navlink">
+										<a class="navlink_sel" id="navlink_card1">Home</a> | 
+										<a class="navlink" id="navlink_card2">About</a> |
+										<a class="navlink" id="navlink_card3">Currently </a>| 
+										<a class="navlink" id="navlink_card4">Previously </a>| 
+										<a class="navlink" id="navlink_card5">Next </a>
+									</div>
 								</footer>
 						</div>
 						<div id="card2" style="display:none;">
-							About Me
-							<p class="cardcontent">I am a student, indie movie enthusiast, and runner.</p>
-							Currently
-							<p class="cardcontent">After finishing my aerospace internship this summer, I am starting my third year studying Engineering Science at the University of Oxford, predicted to graduate with First Class Honours.</p>
+							About
+							<p class="cardcontent">I am a student, indie movie fan, and runner.</p>
+							
 							<p></p>
 							<footer>
 								<ul class="icons">
-									<li><a href="#" class="fa-angle-double-up" id="uparrow">Up</a></li>
+									<li><a href="#" class="fa-angle-double-up" id="uparrow">Up</a></li>	<li><a href="#" class="fa-angle-double-down" id="downarrow">Down</a></li>
 								</ul>
+								<div id="navlink">
+									<a class="navlink" id="navlink_card1">Home</a> | 
+									<a class="navlink_sel" id="navlink_card2">About</a> |
+									<a class="navlink" id="navlink_card3">Currently </a>| 
+									<a class="navlink" id="navlink_card4">Prev </a>| 
+									<a class="navlink" id="navlink_card5">Next </a>
+								</div>
 							</footer>
 						</div>
-						
+						<div id="card3" style="display:none;">
+							Currently
+							<p class="cardcontent">I am starting my third year studying Engineering Science with an emphasis on Thermodynamics, Software, and Communications. <br><br>
+							This year I will also be continuing as the Oxford University Engineering Society IT Officer and an undergraduate representative working with the Engineering Department board.</p>
+							
+							<p></p>
+							<footer>
+								<ul class="icons">
+									<li><a href="#" class="fa-angle-double-up" id="uparrow">Up</a></li>	<li><a href="#" class="fa-angle-double-down" id="downarrow">Down</a></li>
+								</ul>
+								<div id="navlink">
+									<a class="navlink" id="navlink_card1">Home</a> | 
+									<a class="navlink" id="navlink_card2">About</a> |
+									<a class="navlink_sel" id="navlink_card3">Currently </a>| 
+									<a class="navlink" id="navlink_card4">Prev </a>| 
+									<a class="navlink" id="navlink_card5">Next </a>
+								</div>
+							</footer>
+						</div>
+						<div id="card4" style="display:none;">
+							Previously
+							<p class="cardcontent">Over the summer, I interned at an aerospace company working on engine analysis. <br>I built cases for differences in test engine runs and predicted results by reconciling thousands of data points and parameters. By creating an engine model approximation tool, I improved work flow efficiency and prevented calculation errors.</p>
+							
+							<p></p>
+							<footer>
+								<ul class="icons">
+									<li><a href="#" class="fa-angle-double-up" id="uparrow">Up</a></li>			<li><a href="#" class="fa-angle-double-down" id="downarrow">Down</a></li>
+								</ul>
+								<div id="navlink">
+									<a class="navlink" id="navlink_card1">Home</a> | 
+									<a class="navlink" id="navlink_card2">About</a> |
+									<a class="navlink" id="navlink_card3">Currently </a>| 
+									<a class="navlink_sel" id="navlink_card4">Prev </a>| 
+									<a class="navlink" id="navlink_card5">Next </a>
+								</div>
+							</footer>
+						</div>
+						<div id="card5" style="display:none;">
+							Next
+							<p class="cardcontent">I'll be getting my Master of Engineering in June 2018 (currently First Class Honours). I would be interested to chat about any summer or full-time opportunities in the meantime.  </p>
+							
+							<p></p>
+							<footer>
+								<ul class="icons">
+									<li><a href="#" class="fa-angle-double-up" id="uparrow">Up</a></li>			<!--li><a href="#" class="fa-angle-double-down" id="downarrow">Down</a></li-->
+								</ul>
+								<div id="navlink">
+									<a class="navlink" id="navlink_card1">Home</a> | 
+									<a class="navlink" id="navlink_card2">About</a> |
+									<a class="navlink" id="navlink_card3">Currently </a>| 
+									<a class="navlink" id="navlink_card4">Prev </a>| 
+									<a class="navlink_sel" id="navlink_card5">Next </a>
+								</div>
+							</footer>
+						</div>
 					</section>			
 
 				<!-- Footer -->
@@ -98,6 +165,17 @@
                     $( card_a ).slideUp();
                     $( card_b ).slideDown();
                 });
+				
+				$( "a.navlink").click(function() {
+					//alert(event.target.id);
+					var ID_name = event.target.id; 
+					var next_card_number = ID_name.match(/\d$/);
+					var card_a = "#card" + info_boolean.toString();
+					var card_b = "#card" + next_card_number;
+					info_boolean = next_card_number;
+					$( card_a ).slideUp();
+                    $( card_b ).slideDown();
+				})
                 
 			</script>
 
