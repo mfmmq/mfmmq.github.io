@@ -156,6 +156,7 @@
 					var card_b = "#card" + info_boolean.toString();
                     $( card_a ).slideUp();
                     $( card_b ).slideDown();
+					//alert(info_boolean);
                 });
                 
 				$( "a#uparrow" ).click(function() {
@@ -164,6 +165,7 @@
 					var card_b = "#card" + (info_boolean).toString();
                     $( card_a ).slideUp();
                     $( card_b ).slideDown();
+					//alert(info_boolean);
                 });
 				
 				$( "a.navlink").click(function() {
@@ -172,9 +174,10 @@
 					var next_card_number = ID_name.match(/\d$/);
 					var card_a = "#card" + info_boolean.toString();
 					var card_b = "#card" + next_card_number;
-					info_boolean = next_card_number;
+					info_boolean = parseInt( next_card_number );
 					$( card_a ).slideUp();
                     $( card_b ).slideDown();
+					//alert(info_boolean);
 				})
                 
 			</script>
