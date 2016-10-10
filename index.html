@@ -1,0 +1,142 @@
+<!DOCTYPE HTML>
+<!--
+	Identity by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Muyi Maya Qiu</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="assets/js/html5shiv.js"></script><![endif]-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js">
+		$("#card").flip({
+				  trigger: 'manual'
+				});
+                
+		
+		</script>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <script language="JavaScript" src="assets/js/main.js"></script> 
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+        
+	</head>
+	<body class="is-loading">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<section id="main">
+						<div id="card1">
+								<header>
+									<span class="avatar"><img src="images/avatar.jpg" alt="" /></span>
+									<h1>Muyi Maya Qiu</h1>
+									<p> <a href="mailto:maya@mqiu.uk">maya@mqiu.uk</a></p>
+								</header>
+								
+								<footer>
+									<ul class="icons">
+										<li><a href="mailto:maya@mqiu.uk" class="fa-envelope">Email</a></li>
+										<li><a href="#" class="fa-angle-double-down" id="downarrow">Down</a></li>
+										<li><a href="#" class="fa-linkedin" id="linkedin">Linked In</a></li>
+									</ul>
+								</footer>
+						</div>
+						<div id="card2" style="display:none;">
+							About Me
+							<p class="cardcontent">I am a student, indie movie enthusiast, and runner.</p>
+							Currently
+							<p class="cardcontent">After finishing my aerospace internship this summer, I am starting my third year studying Engineering Science at the University of Oxford, predicted to graduate with First Class Honours.</p>
+							<p></p>
+							<footer>
+								<ul class="icons">
+									<li><a href="#" class="fa-angle-double-up" id="uparrow">Up</a></li>
+								</ul>
+							</footer>
+						</div>
+						
+					</section>			
+
+				<!-- Footer -->
+					<footer id="footer">
+						<ul class="copyright">
+							<li>&copy; M. Qiu</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+						</ul>
+					</footer>
+			</div>
+
+		<!-- Scripts -->
+			<!--[if lte IE 8]><script src="assets/js/respond.min.js"></script><![endif]-->
+			<script>
+                var info_boolean = 1;
+                
+				if ('addEventListener' in window) {
+					window.addEventListener('load', function() { document.body.className = document.body.className.replace(/\bis-loading\b/, ''); });
+					document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
+				}
+				
+				
+                $( "a#downarrow" ).click(function() {
+					var card_a = "#card" + info_boolean.toString();
+					info_boolean = info_boolean + 1;
+					var card_b = "#card" + info_boolean.toString();
+                    $( card_a ).slideUp();
+                    $( card_b ).slideDown();
+                });
+                
+				$( "a#uparrow" ).click(function() {
+					var card_a = "#card" + info_boolean.toString();
+					info_boolean = info_boolean - 1;
+					var card_b = "#card" + (info_boolean).toString();
+                    $( card_a ).slideUp();
+                    $( card_b ).slideDown();
+                });
+                
+			</script>
+
+	</body>
+</html>
+
+<!-- <hr /> 
+								<h2>Extra Stuff!</h2>
+								<form method="post" action="#">
+									<div class="field">
+										<input type="text" name="name" id="name" placeholder="Name" />
+									</div>
+									<div class="field">
+										<input type="email" name="email" id="email" placeholder="Email" />
+									</div>
+									<div class="field">
+										<div class="select-wrapper">
+											<select name="department" id="department">
+												<option value="">Department</option>
+												<option value="sales">Sales</option>
+												<option value="tech">Tech Support</option>
+												<option value="null">/dev/null</option>
+											</select>
+										</div>
+									</div>
+									<div class="field">
+										<textarea name="message" id="message" placeholder="Message" rows="4"></textarea>
+									</div>
+									<div class="field">
+										<input type="checkbox" id="human" name="human" /><label for="human">I'm a human</label>
+									</div>
+									<div class="field">
+										<label>But are you a robot?</label>
+										<input type="radio" id="robot_yes" name="robot" /><label for="robot_yes">Yes</label>
+										<input type="radio" id="robot_no" name="robot" /><label for="robot_no">No</label>
+									</div>
+									<ul class="actions">
+										<li><a href="#" class="button">Get Started</a></li>
+									</ul>
+								</form>
+								<hr />
+								-->

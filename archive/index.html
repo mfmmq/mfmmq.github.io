@@ -1,0 +1,175 @@
+ <!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>MFMMQ</title>
+        <meta name="description" content="About Me">
+        <link rel="stylesheet" href="style/alt.css">
+        
+
+        
+        
+                
+        <script type="text/javascript">
+            // global variables here 
+            var c_img = 0 ; // image counter for changing photo
+            var src_img = [
+                ["image/beach.jpg",     "Del Mar, 2010",          "35mm"     ],
+                ["image/flying.jpg",    "Torrey Pines, 2010",     "35mm"     ],
+                ["image/ice.jpg",       "Alaska, 2012",           "digital"  ],
+                ["image/mountain.jpg",  "Alaska, 2012",           "digital"  ],
+                ["image/pebble.jpg",    "Pebble Beach, 2010",     "35mm"     ],    
+                ["image/running.jpg",   "Del Mar, 2010",          "35mm"     ],
+                ["image/seal.jpg",      "Alaska, 2010",           "digital"  ]
+            ];
+            
+            
+            // functions -----------------------------------------------------------------------------------------------
+            
+            function change_img_float(adder) {
+                var img_float_string ;           // define variable for adding picture descriptionj
+                if (c_img >= src_img.length) {   // check if photos have reached end of loop
+                    c_img = 0;                   // if at end reset counter
+                };
+                document.getElementById("img_float").src = src_img[c_img][0];
+                document.getElementById("img_float_Title").innerHTML = src_img[c_img][1] + " -- " + src_img[c_img][2]  + " -- " ;
+                img_float_string = (c_img+1).toString() + " / " + src_img.length.toString() ;
+                document.getElementById("img_float_Description").innerHTML =  img_float_string ;
+                c_img += adder;
+
+            }
+            
+            
+        
+
+        </script>
+    </head>
+
+    
+    
+    
+    
+ <!-- Body content---------------------------------------------------------------------------------------------------------------------------------- -->
+    
+    <body>
+    
+        
+ <!-- Main content---------------------------------------------------------------------------------------------------------------------------------- -->
+    <div id="Container">  
+        
+        
+        <div id="Title">
+        
+            <h1>MFMMQ </h1>
+        <!--
+            <table class="NavLink">
+                <tr class="NavLink">
+                    <td class="NavLink">
+                        <a href=# class="NavLink">Top</a>
+                    </td>
+                    <td class="NavLink">
+                        <a href=# class="NavLink">Currently...</a>
+                    </td>
+                    <td class="NavLink">
+                        <a href=# class="NavLink">Interests</a>
+                    </td>
+                    <td class="NavLink">
+                        <a href=# class="NavLink">Inspiration</a>
+                    </td>
+                </tr>
+                <tr class="NavBorder">
+                    <td colspan="4" class="NavBorder"></td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="min-height:20px,border:none;" height=20px>  </td>
+                </tr>
+            </table>
+        
+        -->
+        </div>
+        
+        
+        
+        
+        <!-- img float content--------------------------- -->
+     
+        
+            <div id="img_float_Container">
+                <!-- Picture description-->
+                <div id="img_float_Text">
+                    <font id="img_float_Title">
+                        Title
+                     </font>
+                    <font id="img_float_Description">
+                        Description
+                    </font>
+                </div>
+                <!-- Picture source-->
+                <img src="image/pebble.jpg" onclick='change_img_float(1);' class="img_float" id="img_float">
+            </div>   
+        
+        
+        <div id="Content">
+            
+                <br/>
+                
+                <h2>Currently...</h2>
+                I'm a rising junior in University. Over the summer I'm interning for an aerospace company studying changes in engine performace. 
+                
+                <br/><br/><br/><br/>
+                
+                <h2>The Website...</h2>
+                This website and stylesheet was made with Brackets in my free time. My other main web project is the Engineering Society <a href="http://ouengsoc.org" target="_blank">website</a> (where I'm the IT officer this year).  
+                
+                <br/><br/><br/><br/>
+                
+                
+            
+                <h2>About me...</h2>
+                <font class="ContentSub">Interested in:</font> Engines, travel, environmental sustainability, and indie movies. <a href="https://www.withouthotair.com/" target="_blank"><i>David McKay's Sustainable Energy</i> book</a> spurred me to be more concious about my own ecological impact. 
+                
+                
+                <br/><br/>
+                
+                <font class="ContentSub">Goals for the future:</font>     
+                Finishing my degree with a first class and getting some backpacking time in. 
+
+                <br><br>
+                
+                <font class="ContentSub">When I'm not working:</font> I might be out for a run, doing yoga, or fiddling with html. Reading <i>The Trial</i> by Kafka - planning to read Walden next.
+                
+
+        </div>
+        
+        
+        
+    <!-- Footer content---------------------------------------------------------------------------------------------------------------------------------- -->
+
+        <div id="Footer">
+            <table class="Footer">
+                <tr>
+                    <td class="Footer">
+                        c. by mmq
+                    </td>
+                <tr>
+                    <td class="Footer_lower">
+                         Last update -- 09/01/2016 22:05
+                    </td>
+                </tr>
+            </table>
+        </div>        
+    </div>
+
+        
+        <script  type="text/javascript">
+            // startup --------------------------------------------------------------------------------------------------
+
+            // initialize picture
+            change_img_float(0)
+        </script>
+        
+        
+    </body>
+</html>
