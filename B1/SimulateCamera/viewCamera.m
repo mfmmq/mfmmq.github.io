@@ -4,7 +4,7 @@ function [] = viewCamera(ObjectLines, T_ow, KMatrix, CameraHeight, ...
 % Takes an object described by a set of lines passed in ObjectLines and
 % draws a picture of the camera's view of the object
 %
-% OBjectLines is 4x2n where each column is a homogeneous point in the
+% ObjectLines is 4x2n where each column is a homogeneous point in the
 % object frame. The object is defined as pairs of points that should have a
 % line drawn between them. T_ow is  a4x4 homogeneous transformation matrix
 % describing the object's frame.
