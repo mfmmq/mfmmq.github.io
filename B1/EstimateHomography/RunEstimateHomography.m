@@ -16,7 +16,7 @@
 
 % 1. Construct the camera model
 % Using code from previous project
-[KMatrix, CameraHeight, CameraWidth] = buildCamera;
+[KMatrix, CameraHeight, CameraWidth, arg_in] = buildCamera;
 
 % 2. Construct a 1m by 1m grid with 10mm tiles in the grid frame
 % The grid is a set of 4 element vectors [x y 0 1]'
@@ -42,7 +42,7 @@ Correspond = buildNoisyCorrespondence(T_ow,T_cw,CalibrationGrid, ...
 % 6. Add in outliers by replacing [u v]' with a point somewhere in the
 % image
 % Define the outlier probability
-pOutlier = 0.05;
+pOutlier = 0.00;
 for j=1:length(Correspond)
     if rand < pOutlier
         % Putting outlier anywhere in the image
@@ -56,12 +56,15 @@ figure(1)
 plot(Correspond(1,:),Correspond(2,:),'.')
 title('The noisy measurements of the tile corners')
 axis ij
+xlim([0 CameraWidth]);
+ylim([0 CameraHeight]);
 
 % 7. Perform the RANSAC estimation - output the result for inspection. If
 % test fails, it returns a zero Homography
 MaxError = 3;       % The maximum error allowed before rejecting a point
 RansacRuns = 50;    % The number of runs when reating the consensus set
-[Homog, BestConsensus] = RansacHomog(Correspond, MaxError, RansacRuns);
+%[Homog, BestConsensus] = ransacHomog(Correspond, MaxError, RansacRuns);
+%Homog
 
 % Test result by constructing the homography for the system from its
 % definition
@@ -70,7 +73,7 @@ T_oc = T_cw \ T_ow;
 % Construct the non-normalised homography from K*[x y t]
 OrigHomog = KMatrix * [T_oc(1:3,1) T_oc(1:3,2) T_oc(1:3,4)];
 % And normalise so that (3,3) is 1.0 - output for inspection
-OrigHomog = OrigHomog / OrigHomog(3,3);
+OrigHomog = OrigHomog / OrigHomog(3,3)
 
 
 

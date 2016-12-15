@@ -24,6 +24,8 @@ end
 s = GridWidth/GridIncrement;    % Points per side in grid
 CalibrationGrid = zeros(4,s);       % Set up 4-vector space
 
+
+
 % Anchor grid center at origin (0,0)
 % Use GridWidth to build limiting corner points, populate with increments
 % from x direction to y direction
@@ -40,4 +42,10 @@ for i = 0:s
         c = c + 1;
     end
 end
+
+% Center grid at origin
+CalibrationGrid = CalibrationGrid - GridWidth/2;
+
+
+
 

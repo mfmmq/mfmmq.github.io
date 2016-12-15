@@ -9,7 +9,7 @@ function [ KMatrix, CameraHeight, CameraWidth ] = buildCamera
 % Define parameters 
 arg_in(1) = randi([200, 4000]);     % x_chip, chip width in pixels
 arg_in(2) = randi([300, 5000]);     % y_chip, chip height in pixels
-arg_in(3) = randi([10, 1000])/10;   % y_chip, chip height in pixels
+arg_in(3) = randi([10, 1000])/10;   % focal length in mm
 arg_in(4) = randi([1, 100])/1000;    % x_eff, effective x width of pixel in mm
 arg_in(5) = randi([1, 100])/1000;    % y_eff, effective y height of pixel in mm
 arg_in(6) = randi([-1, 1])/10;      % skew, skewness in xpixels

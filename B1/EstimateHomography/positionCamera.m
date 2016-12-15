@@ -13,7 +13,7 @@ function [ T_cw ] = positionCamera(T_ow, Distance)
 % Assign space for the camera frame
 T_cw = zeros(4);
 
-% Set hte homogeneous multiplier to 1
+% Set the homogeneous multiplier to 1
 T_cw(4,4) = 1;
 
 % Extract the object origin 
@@ -22,10 +22,10 @@ ObjectOrigin = T_ow(1:3,4);
 % View the camera from about Distance with a bit of randomness along the
 % negative z-axis of the grid. This vector will almost be parallel to the
 % camera z axis.
-InitialViewVector = -Distance*T_ow(1:3,3) + 0.1*Distnace*rand(3,1);
+InitialViewVector = -Distance*T_ow(1:3,3) + 0.1*Distance*rand(3,1);
 
 % Define the origin of the camera frame in world coordinates
-T_cw(1:3,4) = ObjectOrigin - InitalViewVector;
+T_cw(1:3,4) = ObjectOrigin - InitialViewVector;
 
 % Define the camera z-axis as pointing at the object origin
 Normz = norm(InitialViewVector);
@@ -34,7 +34,7 @@ if Normz < eps
 end
 
 %Define a unit vector pointing at the object
-InitalCameraz = InitialViewVector/Normz;
+InitialCameraz = InitialViewVector/Normz;
 
 % Perturb the initial z-axis a bit more
 CameraZ = InitialCameraz - 0.01*(rand(3,1)-0.5);
@@ -57,6 +57,6 @@ CameraX = CameraX/Normx;
 CameraY = cross(CameraZ, CameraX);
 
 % Complete the transformation matrix
-T_cw(1:3, 1:3) = [CameraX CameraY Cameraz];
+T_cw(1:3, 1:3) = [CameraX CameraY CameraZ];
 
 end

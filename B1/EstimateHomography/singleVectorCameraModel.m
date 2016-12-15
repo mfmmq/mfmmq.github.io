@@ -45,8 +45,8 @@ end
 testRange(ChipWidth, 200, 4000, 'ChipWidth');
 testRange(ChipHeight, 300, 5000, 'ChipHeight');
 testRange(FocalLength, 1.0, 100.0, 'FocalLength');
-testRange(PixelWidth, 0.001, 0.1, 'PixelWidth');
-testRange(PixelHeight, 0.001, 0.1, 'PixelHeight');
+testRange(PixelWidth, 0.0001, 0.1, 'PixelWidth');
+testRange(PixelHeight, 0.0001, 0.1, 'PixelHeight');
 testRange(Skewness, -0.1, 0.1, 'Skewness');
 testRange(P_u, 0.25, 0.75, 'P_u');
 testRange(P_v, -.25, 0.75, 'P_v');
@@ -59,8 +59,8 @@ FvPixels = FocalLength / PixelHeight;
 
 % Construct the K-Matrix for return
 KMatrix = ...
-    [FuPixels   Skewness    P_u*ChipWidth;
-     0          FvPixels    P_v*ChipHeight;
+    [FuPixels   Skewness    P_u*ChipWidth; ...
+     0          FvPixels    P_v*ChipHeight; ...
      0          0           1]
 
 

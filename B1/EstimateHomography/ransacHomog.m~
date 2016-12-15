@@ -39,7 +39,7 @@ for Runs = 1:NRuns
         SamplePoints = zeros(1,4);
         
         % First point is a random integer between 1 and n inclusive
-        SamplePoints(1) = 1 + fix(n*rand);
+        Sa
         if SamplePoints(1) > n 
             SamplePoints(1) = 1;
         end
@@ -82,7 +82,7 @@ for Runs = 1:NRuns
         
         % 3. Check if the regressor is full rank
         if rank(Regressor) > 7
-            HomogVec = Regressor \ DataVec;
+            HomogVec = Regressor \ DataVect;
             
             % The homography for this sample 
             Homog(1,1) = HomogVec(1);
@@ -106,7 +106,7 @@ for Runs = 1:NRuns
                     1];
                 HomogenousPoint(1) = HomogenousPoint(1) / ...
                     HomogenousPoint(3);
-                HomogenousPoint(2) = HomogenousPoint(2) / ...
+                HomogenousPoint(2) = HmogenousPoint(2) / ...
                     HomogenousPoint(3);
                 
                 ThisError = norm(HomogenousPoint(1:2) ... 

@@ -35,13 +35,16 @@ if s(1) ~= 4 || s(2) ~= 4
     error('T_cw has an invalid size')
 end
 
-% Transform the object into world coordinates
 
+% Transform the object into world coordinates
 CalibrationGrid = T_ow * CalibrationGrid;
+% Pass as point pairs to correspond
+Correspond = CalibrationGrid(1:2,:);
 
 % Transform the object into camera coordinates using the backslash operator
 CalibrationGrid = T_cw \ CalibrationGrid;
 
+%
 % Project out the 4th coordinate and multiply by the KMatrix
 CalibrationGrid = KMatrix * CalibrationGrid(1:3,:);
 
@@ -49,14 +52,39 @@ CalibrationGrid = KMatrix * CalibrationGrid(1:3,:);
 % Need to normalise points to get 2D points
 s = size(CalibrationGrid);
 for j = 1:s(2) 
-    CalibrationGrid(1:2,j) = CalibrationGrid(1:2,j) / CalibrationGrid(3.j);
+    CalibrationGrid(1:2,j) = CalibrationGrid(1:2,j) / CalibrationGrid(3,j);
 end
-
+%}
 % Throw away normalising components
 CalibrationGrid = CalibrationGrid(1:2,:);
 
 
-
-
-
 % Generate noise with variation of 0.5 pixels and matlab function randn 
+CalibrationGrid = CalibrationGrid + 0.5 * randn(size(CalibrationGrid));
+
+Correspond = [CalibrationGrid; Correspond];
+
+
+% Throw away points outside the camera frame
+%
+
+s = size(Correspond);
+i = 1;
+while i <= s(2)
+   % Camera width
+   if Correspond(1,i) < 0 || Correspond(1,i) > CameraWidth
+       Correspond(:,i) = [];
+       i = i-1;
+       s(2) = s(2)-1;
+   elseif Correspond(2,i) < 0 || Correspond(2,i) > CameraHeight
+       Correspond(:,i) = [];
+       i = i-1;
+       s(2) = s(2)-1;
+   end
+   i = i+1;
+end
+
+%}
+
+
+
