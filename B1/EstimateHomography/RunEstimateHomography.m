@@ -42,7 +42,7 @@ Correspond = buildNoisyCorrespondence(T_ow,T_cw,CalibrationGrid, ...
 % 6. Add in outliers by replacing [u v]' with a point somewhere in the
 % image
 % Define the outlier probability
-pOutlier = 0.00;
+pOutlier = 0.05;
 for j=1:length(Correspond)
     if rand < pOutlier
         % Putting outlier anywhere in the image
