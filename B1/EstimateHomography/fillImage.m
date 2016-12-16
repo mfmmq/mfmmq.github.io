@@ -15,7 +15,7 @@ GridCorners = [-GridWidth/2 -GridWidth/2 GridWidth/2 GridWidth/2; ...
     0 0 0 0;
     1 1 1 1];
 
-GridCorners = [0 0 GridWidth GridWidth; ...
+GridCorners1 = [0 0 GridWidth GridWidth; ...
     GridWidth 0 GridWidth 0;
     0 0 0 0;
     1 1 1 1 ];
@@ -26,7 +26,7 @@ GridCorners = T_ow * GridCorners;
 % We have a 1m by 1m grid somewhere in space and we need to view the grid
 % from the camera. We view from a random location based on a 'distance'
 % called CameraBaseDistance. This is an initial estimate
-CameraBaseDistance = 20000;
+CameraBaseDistance = 2000;
 
 % Keep reducing the distance until all 4 corners are outside the image
 % InsideImage is a flag that records the failure, triggering a move towards

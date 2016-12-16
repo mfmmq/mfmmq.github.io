@@ -22,8 +22,7 @@ end
 
 % Preallocate grid size
 s = GridWidth/GridIncrement;    % Points per side in grid
-CalibrationGrid = zeros(4,s);       % Set up 4-vector space
-
+CalibrationGrid = zeros(4,s*s+2);       % Set up 4-vector space
 
 
 % Anchor grid center at origin (0,0)
@@ -43,8 +42,9 @@ for i = 0:s
     end
 end
 
+
 % Center grid at origin
-CalibrationGrid = CalibrationGrid - GridWidth/2;
+CalibrationGrid(1:2,:) = CalibrationGrid(1:2,:) - GridWidth/2;
 
 
 

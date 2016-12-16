@@ -1,24 +1,3 @@
-function [Homog , BestConsensus] = ransacHomog(Correspond, MaxError, NRuns)
-%RansacHomog Runs a Ransac estimation of the homography 
-% passed as pairs of points in Correspond where Correspond is a set of
-% 4-vectors of the form [[u v]';[x y]']
-%
-% MaxError is the maximum error for a point to be rejected in the consensus
-% set
-% NRuns is the number of times to run the estimator
-%
-% Homog is the homography that has been identified. If no homography can be
-% computed, then a 3x3 zero matrix is returned
-%
-% 1. For each of NRuns, choose a set of 4 points
-% 2. Use the 4 points to generate a regression matrix and a data vector
-% 3. If the regressor is full rank, estimate this homography
-% 4. Go through the points and accept those whose error norm is less that
-% that set by MaxError
-% 5. Record the set of points in the largest consensus set
-% 6. If the consensus set is not empty, carry out a least squares estimate
-% of the homography using svd
-
 % The number of points available
 n = length(Correspond);
 
@@ -28,7 +7,7 @@ Homog = zeros(3);
 nBest = 0;
 
 for Runs = 1:NRuns
-    
+    Runs
     RankTest = 1;
     while RankTest == 1
         % RankTest is set to 1 if the 4 points do not give a full rank
@@ -37,9 +16,8 @@ for Runs = 1:NRuns
         
         % 1. Choose a sample set
         SamplePoints = zeros(1,4);
-        
         % First point is a random integer between 1 and n inclusive
-        Sa
+        SamplePoints(1) = 1 + fix(n*rand);
         if SamplePoints(1) > n 
             SamplePoints(1) = 1;
         end
@@ -82,7 +60,7 @@ for Runs = 1:NRuns
         
         % 3. Check if the regressor is full rank
         if rank(Regressor) > 7
-            HomogVec = Regressor \ DataVect;
+            HomogVec = Regressor \ DataVec;
             
             % The homography for this sample 
             Homog(1,1) = HomogVec(1);
@@ -106,7 +84,7 @@ for Runs = 1:NRuns
                     1];
                 HomogenousPoint(1) = HomogenousPoint(1) / ...
                     HomogenousPoint(3);
-                HomogenousPoint(2) = HmogenousPoint(2) / ...
+                HomogenousPoint(2) = HomogenousPoint(2) / ...
                     HomogenousPoint(3);
                 
                 ThisError = norm(HomogenousPoint(1:2) ... 
@@ -162,7 +140,7 @@ if nBest > 0
         Condition = D(1,1) / D(8,8);
     end
     
-    if Condition > 1.0E8
+    if Condition > 1.0e8
         % A very poor condition number, signal that there is no homography
         Homog = zeros(3);
     else
@@ -172,7 +150,7 @@ if nBest > 0
             D(j,j) = 1.0 / D(j,j);
         end
         
-        HomogVec = V*(D*U'*DataVac);
+        HomogVec = V*(D*(U'*DataVec));
         
         % Construct the homography
         Homog(1,1) = HomogVec(1);
@@ -197,21 +175,3 @@ end
             
         
             
-            
-                
-                
-                
-                
-            
-            
-            
-            
-            
-            
-            
-            
-            
-                
-                
-                
-                

@@ -28,7 +28,7 @@ Homog = zeros(3);
 nBest = 0;
 
 for Runs = 1:NRuns
-    
+    Runs
     RankTest = 1;
     while RankTest == 1
         % RankTest is set to 1 if the 4 points do not give a full rank
@@ -162,7 +162,7 @@ if nBest > 0
         Condition = D(1,1) / D(8,8);
     end
     
-    if Condition > 1.0E8
+    if Condition > 1.0e8
         % A very poor condition number, signal that there is no homography
         Homog = zeros(3);
     else
@@ -172,7 +172,7 @@ if nBest > 0
             D(j,j) = 1.0 / D(j,j);
         end
         
-        HomogVec = V*(D*U'*DataVac);
+        HomogVec = V*(D*(U'*DataVec));
         
         % Construct the homography
         Homog(1,1) = HomogVec(1);

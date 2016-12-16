@@ -63,8 +63,11 @@ ylim([0 CameraHeight]);
 % test fails, it returns a zero Homography
 MaxError = 3;       % The maximum error allowed before rejecting a point
 RansacRuns = 50;    % The number of runs when reating the consensus set
-%[Homog, BestConsensus] = ransacHomog(Correspond, MaxError, RansacRuns);
-%Homog
+[Homog, BestConsensus] = ransacHomog(Correspond, MaxError, RansacRuns);
+Homog
+%NRuns = RansacRuns;
+
+
 
 % Test result by constructing the homography for the system from its
 % definition

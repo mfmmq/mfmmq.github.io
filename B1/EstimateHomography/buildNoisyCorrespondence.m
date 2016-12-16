@@ -18,6 +18,7 @@ function [ Correspond ] = buildNoisyCorrespondence(T_ow,T_cw, ...
 % CameraWidth is the number of horizontal pixels
 
 
+
 % Check sizes 
 
 s = size(T_ow);
@@ -37,32 +38,32 @@ end
 
 
 % Transform the object into world coordinates
-CalibrationGrid = T_ow * CalibrationGrid;
+CorrespondencePass = T_ow * CalibrationGrid;
 % Pass as point pairs to correspond
-Correspond = CalibrationGrid(1:2,:);
+Correspond(3:4,:) = CalibrationGrid(1:2,:);
 
 % Transform the object into camera coordinates using the backslash operator
-CalibrationGrid = T_cw \ CalibrationGrid;
+CorrespondencePass = T_cw \ CorrespondencePass;
 
 %
 % Project out the 4th coordinate and multiply by the KMatrix
-CalibrationGrid = KMatrix * CalibrationGrid(1:3,:);
+CorrespondencePass = KMatrix * CorrespondencePass(1:3,:);
 
 % Now have a set of homogeneous points representing 3D points
 % Need to normalise points to get 2D points
-s = size(CalibrationGrid);
+s = size(CorrespondencePass);
 for j = 1:s(2) 
-    CalibrationGrid(1:2,j) = CalibrationGrid(1:2,j) / CalibrationGrid(3,j);
+    CorrespondencePass(1:2,j) = CorrespondencePass(1:2,j) / CorrespondencePass(3,j);
 end
-%}
+
 % Throw away normalising components
-CalibrationGrid = CalibrationGrid(1:2,:);
+CorrespondencePass = CorrespondencePass(1:2,:);
 
 
 % Generate noise with variation of 0.5 pixels and matlab function randn 
-CalibrationGrid = CalibrationGrid + 0.5 * randn(size(CalibrationGrid));
+CorrespondencePass = CorrespondencePass + 0.5 * randn(size(CorrespondencePass));
 
-Correspond = [CalibrationGrid; Correspond];
+Correspond(1:2,:) = CorrespondencePass;
 
 
 % Throw away points outside the camera frame
@@ -84,7 +85,6 @@ while i <= s(2)
    i = i+1;
 end
 
-%}
 
 
 
