@@ -28,7 +28,6 @@ Homog = zeros(3);
 nBest = 0;
 
 for Runs = 1:NRuns
-    Runs
     RankTest = 1;
     while RankTest == 1
         % RankTest is set to 1 if the 4 points do not give a full rank
@@ -193,26 +192,6 @@ else
     Homog = zeros(3);
     BestConsensus = 0;
 end
-        
-               
-            
-        
-            
-            
-                
-                
-                
-                
-            
-            
-            
-            
-            
-            
-            
-            
-            
-                
-                
-                
-                
+
+
+
