@@ -29,7 +29,19 @@ h33 = Homog(3,3);
 % [ h11^2-h12^2  2(h11h21-h12h22) 2(h11h31-h12h32) h21^2-h22^2
 % 2(h21h31-h22h32) h31^2-h32^2;
 % h11h12 h11h22+h21h12 h11h32+h31h12 h21h22 h21h32+h31h22 h31h32]
+
 RegressorRows(1,1) = h11^2 - h12^2;
 RegressorRows(1,2) = 2*(h11*h21 - h12*h22);
 RegressorRows(1,3) = 2*(h11*h31-h12*h32);
-RegressorRows(1,4) = h21^2 - h22
+RegressorRows(1,4) = h21^2 - h22^2;
+RegressorRows(1,5) = 2*(h21*h31-h22*h32);
+RegressorRows(1,6) = h31^2 - h32^2;
+
+RegressorRows(2,1) = h11*h12;
+RegressorRows(2,2) = h11*h22+h21*h12;
+RegressorRows(2,3) = h11*h32 + h31*h12;
+RegressorRows(2,4) = h21*h22;
+RegressorRows(2,5) = h21*h32+h31*h22;
+RegressorRows(2,6) = h31*h32;
+
+
