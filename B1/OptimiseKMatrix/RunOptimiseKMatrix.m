@@ -101,7 +101,7 @@ for CalImage = 1:nImages
         % Note: the above is in pixels, needs to be scaled before RANSAC
         
         RansacRuns = 50; % Number of runs when creating consensus set
-        [Homog, BestConsenss] = ...
+        [Homog, BestConsensus] = ...
             ransacHomog(Correspond,MaxError*CameraScale,RansacRuns);
         
         if Homog(3,3) > 0
@@ -163,7 +163,7 @@ end
 
 
 % 9. Carry out the Cholesky factorization
-KMatEstimted = chol(Phi);
+KMatEstimated = chol(Phi);
 
 % Invert the factor
 KMatEstimated = KMatEstimated \ eye(3);
@@ -174,6 +174,9 @@ KMatEstimated = KMatEstimated \ eye(3);
 
 % First normalise the K-matrix
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%CHcke for eps here?
+if KMatEstimated(3,3) < eps
+    error('Could not normalise the estimated K-matrix');
+end
 KMatEstimated = KMatEstimated / KMatEstimated(3,3);
 
 % Optimise the K-matrix
@@ -187,5 +190,4 @@ KMatEstimated(2,3) = KMatEstimated(2,3) +1;
 KMatEstimated(1:2,1:3) = KMatEstimated(1:2,1:3) / CameraScale;
 
 
-% Add 1.0 to the translation part of the image
     

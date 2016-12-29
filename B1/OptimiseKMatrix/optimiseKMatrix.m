@@ -28,7 +28,23 @@ function [ KMatrix ] = optimiseKMatrix( InitialKMatrix, Data )
 % it becomes a poor predictor of the change in error, then recompute
 
 % Input checks
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+%!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+% Check KMatrix size, values
+if size(InitialKMatrix) ~= [3,3]
+    error('KMatrix size is incorrect');
+end
+if abs(InitialKMatrix(2,1))+abs(InitialKMatrix(3,1))+abs(InitialKMatrix(3,2)) ~= 0
+    error('Nonzero in bottom zero of KMatrix');
+end
+% Check data size, make sure everything is there
+[~,s] = size(Data);
+if s ~= 3
+    error('Wrong number of data cell types');
+end
+    
+
+
 
 % Initialise the KMatrix
 KMatrix = InitialKMatrix;
@@ -51,14 +67,14 @@ RotMat = zeros(3);
 % 1. First need to use initial KMatrix to generate a perspectivity for each
 % image and hence the parameterization of the grid's frame in the camera
 % frame
-FrameParameters = cell(nimages,2);
+FrameParameters = cell(nImages,2);
 % Labels for accessing the cell
 NANGLE = 1;
 NTRANSLATION = 2;
 
 for nHomog = 1:nImages
     % Extract the homography from the data and convert to a perspectivity 
-    Perspectivity = KMatrix \ Data{nHomog,nHomography};
+    Perspectivity = KMatrix \ Data{nHomog,NHOMOGRAPHY};
     
     % The perspectivity is scaled so that its bottom right hand value is
     % a unit vector, first column needs to have a norm of 1 (a column of a
@@ -71,7 +87,7 @@ for nHomog = 1:nImages
     % Start building the rotation matrix
     RotMat(:,1:2) = Perspectivity(:,1:2);
     % Project out the first column from the second
-    RotMat(L,2) = RotMat(:,2) - (RotMat(:,1)'*RotMat(:,2))*RotMat(:,1);
+    RotMat(:,2) = RotMat(:,2) - (RotMat(:,1)'*RotMat(:,2))*RotMat(:,1);
     RotMat(:,2) = RotMat(:,2) / norm(RotMat(:,2));
     % And complete with a cross product
     RotMat(:,3) = cross(RotMat(:,1),RotMat(:,2));
@@ -100,8 +116,8 @@ for nHomog = 1:nImages
     
     % Need to check if the axis is pointing in the 'right' direction
     % consistent with Theta using Rodrigues' formula
-    Rplus = Rodrigues(RotAxis,Theta);
-    Rminus = Rodrigues(-RotAxis,Theta);
+    Rplus = rodriguesRotation(RotAxis,Theta);
+    Rminus = rodriguesRotation(-RotAxis,Theta);
     
     % Reverse the axis if minus Theta is the best match
     if norm(RotMat-Rminus) < norm(RotMat-Rplus)
@@ -151,6 +167,7 @@ for j = 1:nImages
         Data{j,NCORRESPOND}, Data{j,NCONSENSUS});
     
     % Compute the initial error
+    errorvec = size(OptComponents{j,NERRORVECTOR})
     CurrentError = CurrentError + 0.5 * ...
         OptComponents{j,NERRORVECTOR}'*OptComponents{j,NERRORVECTOR};
     
@@ -172,16 +189,19 @@ for j = 1:nImages
         OptComponents{j,NFRAMEJACOB}'*OptComponents{j,NFRAMEJACOB};
     
     JTransposeJ(1:5,StartRow:EndRow) = ...
-        OptComponents{j,NFRAMEJACOB}'*OptComponents{j,NFRAMEJACOB};
+        OptComponents{j,NKMATJACOB}'*OptComponents{j,NFRAMEJACOB};
     
     % Make matrix symmetrical
-    JTranspose(StartRow:EndRow,1:5) = JTranspose(1:5,StartRow:EndRow);
+    JTransposeJ(StartRow:EndRow,1:5) = JTransposeJ(1:5,StartRow:EndRow)';
     
     % Compute the gradient vector
+    size(OptComponents{j,NKMATJACOB}')
+    size(OptComponents{j,NERRORVECTOR})
     Gradient(1:5) = Gradient(1:5) + ...
-        OptComponents{j,NKMATJACOB}'*OptComponents{j,NERRORVECTOR};
+        OptComponents{j,NKMATJACOB}'*OptComponents{j,NERRORVECTOR}';
+    size(Gradient)
     Gradient(StartRow:EndRow) = OptComponents{j,NFRAMEJACOB}'*...
-        OptComponents{j,NERRORVECTOR};
+        OptComponents{j,NERRORVECTOR}';
     
 end
 
@@ -243,7 +263,7 @@ while Searching == 1
         
         % And compute the error vector for this image
         OptComponents{j,NERRORVECTOR} = ...
-            ComputeImageErrors ( KMatPerturbed, ...
+            computeImageErrors( KMatPerturbed, ...
             FrameParametersPerturbed{j,NANGLE}, ...
             FrameParametersPerturbed{j,NTRANSLATION}, ...
             Data{j,NCORRESPOND}, Data{j,NCONSENSUS});
@@ -267,7 +287,7 @@ while Searching == 1
     else
         % Error has gone down, update mu
         nu = 2; % Reset to default start value of nu
-        mu = mu * max([1/3,(1-(2*Gain-1)^3]);
+        mu = mu * max([1/3,(1-(2*Gain-1)^3)]);
         
         % Update the parameters
         KMatrix = KMatPerturbed;
@@ -285,7 +305,7 @@ while Searching == 1
                 % The Jacobian
                 [OptComponents{j,NKMATJACOB},...
                     OptComponents{j,NFRAMEJACOB}] = ...
-                    SingleImageJacobian(KMatrix, ...
+                    singleImageJacobian(KMatrix, ...
                     FrameParameters{j,NANGLE}, ...
                     FrameParameters{j,NANGLE}, ...
                     Data{j,NCORRESPOND}, Data{j,NCONSENSUS});
