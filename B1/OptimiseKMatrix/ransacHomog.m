@@ -110,6 +110,7 @@ for Runs = 1:NRuns
                 
                 ThisError = norm(HomogenousPoint(1:2) ... 
                     - [Correspond(1,j);Correspond(2,j)]);
+%                 MaxError
                 
                 if ThisError < MaxError
                     nCurrent = nCurrent + 1;
@@ -132,7 +133,7 @@ for Runs = 1:NRuns
 end
 
 
-% 6. BestConsensus now contains the largeset set of consistent estimates
+% 6. BestConsensus now contains the largest set of consistent estimates
 % Use this set to estimate the homography using a robust inverse
 if nBest > 0 
     % The number of measurements in the consensus set
@@ -146,6 +147,10 @@ if nBest > 0
         % HomogRowPair generates 2 rows of the 8 column matrix that
         % multiplies the unknown vector of homography elements to get the
         % vector of measurements
+%         jval = j
+%         sizebestconsensus = size(BestConsensus)
+%         jbestconsensus = BestConsensus(j)
+%         sizecorres = size(Correspond(:,BestConsensus(j)))
         [Regressor(r1:r2,:),DataVec(r1:r2)] = ...
             HomogRowPair(Correspond(:,BestConsensus(j)));
     end

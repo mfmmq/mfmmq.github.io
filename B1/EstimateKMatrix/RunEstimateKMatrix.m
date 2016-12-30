@@ -95,7 +95,7 @@ for CalImage = 1:nImages
         % the norm (u and v)
         % In pixels so needs to be scaled before RANSAC
                 
-        RansacRuns = 50; % Runs when creating the consensus set
+        RansacRuns = 500; % Runs when creating the consensus set
         [Homog, BestConsensus] = ...
             ransacHomog(Correspond,MaxError*CameraScale,RansacRuns);
         
@@ -110,7 +110,6 @@ for CalImage = 1:nImages
         end
         
     end % End of the Estimating loop
-    Homog
 end % End of the nImages loop
 
 % 8. Build the regressor for estimating the Cholesky product

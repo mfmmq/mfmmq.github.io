@@ -21,8 +21,16 @@ arg_in(8) = randi([25, 75])/100;    % y_offset, principle pt offset in y frac
 arg_in(1) = 1200;
 arg_in(2) = 700;
 
-CameraHeight = arg_in(2)
-CameraWidth = arg_in(1)
+
+CameraWidth = arg_in(1);
+CameraHeight = arg_in(2);
+arg_in(3) = 50;
+arg_in(4) = 500/10000;
+arg_in(5) = 600/10000;
+arg_in(6) = .1;
+arg_in(7) = 30/100;
+arg_in(8) = 70/100;
+
 
 
 

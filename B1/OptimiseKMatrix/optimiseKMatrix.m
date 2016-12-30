@@ -167,7 +167,6 @@ for j = 1:nImages
         Data{j,NCORRESPOND}, Data{j,NCONSENSUS});
     
     % Compute the initial error
-    errorvec = size(OptComponents{j,NERRORVECTOR})
     CurrentError = CurrentError + 0.5 * ...
         OptComponents{j,NERRORVECTOR}'*OptComponents{j,NERRORVECTOR};
     
@@ -176,6 +175,8 @@ for j = 1:nImages
         singleImageJacobian( KMatrix, ...
         FrameParameters{j,NANGLE}, FrameParameters{j,NTRANSLATION},...
         Data{j,NCORRESPOND}, Data{j,NCONSENSUS});
+    OptComponents{j,NKMATJACOB}(1:100)
+    
     
     % The top 5x5 block is the sum of all the inner products of the
     % K-matrix Jacobian blocks
@@ -194,15 +195,13 @@ for j = 1:nImages
     % Make matrix symmetrical
     JTransposeJ(StartRow:EndRow,1:5) = JTransposeJ(1:5,StartRow:EndRow)';
     
-    % Compute the gradient vector
-    size(OptComponents{j,NKMATJACOB}')
-    size(OptComponents{j,NERRORVECTOR})
-    Gradient(1:5) = Gradient(1:5) + ...
-        OptComponents{j,NKMATJACOB}'*OptComponents{j,NERRORVECTOR}';
-    size(Gradient)
-    Gradient(StartRow:EndRow) = OptComponents{j,NFRAMEJACOB}'*...
-        OptComponents{j,NERRORVECTOR}';
     
+    % Compute the gradient vector
+    Gradient(1:5) = Gradient(1:5) + ...
+        OptComponents{j,NKMATJACOB}'*OptComponents{j,NERRORVECTOR};
+    Gradient(StartRow:EndRow) = OptComponents{j,NFRAMEJACOB}'*...
+        OptComponents{j,NERRORVECTOR};
+
 end
 
 % The inital value of mu

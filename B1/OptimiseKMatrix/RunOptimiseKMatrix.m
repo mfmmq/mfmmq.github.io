@@ -75,7 +75,7 @@ for CalImage = 1:nImages
         
         % 6. Add in some outliers by replacing [u v]' with a point
         % somewhere else in teh image
-        pOutlier = 0.05; % Defining outlier probability
+        pOutlier = 0.00; % Defining outlier probability
         for j = 1:length(Correspond)
             r = rand;
             if r < pOutlier
@@ -84,9 +84,11 @@ for CalImage = 1:nImages
             end
         end
         
+        
+        
         % Now scale grid and camera to [-1,1] to improve the conditioning
-        % of the Homogrpahy estimation
-        Correspond(1:2,:) = Correspond(1:2,:)*CameraScale -1.0;
+        % of the Homography estimation
+        Correspond(1:2,:) = Correspond(1:2,:)*CameraScale - 1.0;
         Correspond(3:4,:) = Correspond(3:4,:)*GridScale;
         
         % 7. Perform the RANSAC estimation
@@ -100,7 +102,7 @@ for CalImage = 1:nImages
         %
         % Note: the above is in pixels, needs to be scaled before RANSAC
         
-        RansacRuns = 50; % Number of runs when creating consensus set
+        RansacRuns = 500; % Number of runs when creating consensus set
         [Homog, BestConsensus] = ...
             ransacHomog(Correspond,MaxError*CameraScale,RansacRuns);
         
@@ -109,6 +111,7 @@ for CalImage = 1:nImages
             HomogData{CalImage,NHOMOGRPAHY} = Homog;
             HomogData{CalImage,NCORRESPOND} = Correspond;
             HomogData{CalImage,NCONSENSUS} = BestConsensus;
+
         else
             % Estimate failed, try again
             Estimating = 1;
@@ -177,7 +180,8 @@ KMatEstimated = KMatEstimated \ eye(3);
 if KMatEstimated(3,3) < eps
     error('Could not normalise the estimated K-matrix');
 end
-KMatEstimated = KMatEstimated / KMatEstimated(3,3);
+KMatEstimated = KMatEstimated / KMatEstimated(3,3)
+KMatrix
 
 % Optimise the K-matrix
 OptKMatrix = optimiseKMatrix(KMatEstimated,HomogData);
@@ -188,6 +192,10 @@ KMatEstimated(2,3) = KMatEstimated(2,3) +1;
 
 % Rescale back to pixels
 KMatEstimated(1:2,1:3) = KMatEstimated(1:2,1:3) / CameraScale;
-
+KMatrix
+KMatEstimated
+OptKMatrix(1,3) = OptKMatrix(1,3)+1;
+OptKMatrix(2,3) = OptKMatrix(2,3)+1;
+OptKMatrix(1:2,1:3) = OptKMatrix(1:2,1:3)/CameraScale
 
     

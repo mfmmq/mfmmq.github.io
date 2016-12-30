@@ -15,19 +15,20 @@ function [ KMatJacob, FrameJacob ] = singleImageJacobian( ...
 
 
 
-dp = 0.0001;                    % Small amount to scale each parameter by
+dp = 0.001;                    % Small amount to scale each parameter by
 KMatrix = OrigKMatrix;          % Initalise KMatrix
 RotAxis = OrigRotAxis;          % Initialise angle-axis representation
 Translation = OrigTranslation;  % Initialise translation
-s = size(Correspond);           % For preallocating matrices
-KMatJacob = zeros(5,s(2));      % Initialise KMatJacob
-FrameJacob = zeros(6,s(2));     % Initialise FrameJacob
 
 
 
 % 1. First calculate the initial error vector
 ErrorVector = computeImageErrors(KMatrix, RotAxis, Translation, ...
     Correspond, BestConsensus);
+
+s = size(ErrorVector);           % For preallocating matrix
+FrameJacob = zeros(6,s(1));   % Initialise FrameJacob
+KMatJacob = zeros(5,s(1));    % Initialise KMatJacob
 
 
 
@@ -36,25 +37,30 @@ ErrorVector = computeImageErrors(KMatrix, RotAxis, Translation, ...
 
 % Perturb each element of the KMatrix and calculate the change in the error
 % vector. Reset and perturb the next element
-
-KMatIndex = [1 2 3 5 6]; % Locations of elements to perturb
+KMatIndex = [1 4 7 5 8]; % Locations of elements to perturb
 for i = 1:5
-    KMatrix(KMatIndex(i)) = KMatrix(KMatIndex(i)) * (1+dp);
+    %initialkmatval = KMatrix(KMatIndex(i))
+    Step =  KMatrix(KMatIndex(i)) * dp;
+    if (Step <= eps)
+       % fprintf('Small change in parameter, setting to small step\r')
+        Step = 0.001;
+    end
+    KMatrix(KMatIndex(i)) = KMatrix(KMatIndex(i)) + Step;
+    %Kmatindexval = KMatrix(KMatIndex(i))
     % Find new image error from perturbation
     NewErrorVector = computeImageErrors(KMatrix, RotAxis, Translation, ...
         Correspond, BestConsensus);
     
     % Find the partial derivative approximation and add to KMatJacob by
     % calculating the change in error vector and dividing by the change
-    size(NewErrorVector);
-   
     KMatJacob(i,:) = (NewErrorVector - ErrorVector)/...
-        (dp*KMatrix(KMatIndex(i)));
+        (Step);
     
     % Reset the perturbed value
-     KMatrix(KMatIndex(i)) =  OrigKMatrix(KMatIndex(i));
+    KMatrix(KMatIndex(i)) =  OrigKMatrix(KMatIndex(i));
     
 end
+
 
 
 
@@ -69,6 +75,8 @@ OrigAngle = norm(OrigRotAxis);
 OrigAxis = OrigRotAxis/OrigAngle; % Divide by angle to get unit axis vector
 
 
+
+
 % Calculate the jacobian component for angle perturbation
 %{
 RotAxis = OrigRotAxis*(1+dp); % Perturb the angle by scalar dp
@@ -78,6 +86,7 @@ FrameJacob(1,:) = (NewErrorVector - ErrorVector)/dp/Angle;
 %}
 
 % Add the axis perturbation jacobian component
+%{
 Axis = [1+dp;1;1].*OrigAxis;
 RotAxis = OrigAngle*Axis/norm(Axis); % Create angle-axis representation
 NewErrorVector = computeImageErrors(KMatrix, RotAxis, Translation,...
@@ -95,6 +104,16 @@ RotAxis = OrigAngle*Axis/norm(Axis); % Create angle-axis representation
 NewErrorVector = computeImageErrors(KMatrix, RotAxis, Translation,...
     Correspond, BestConsensus); 
 FrameJacob(3,:) = (NewErrorVector - ErrorVector)/dp/Axis(3);
+%}
+
+for j = 1:3
+    RotAxis(j) = RotAxis(j) * (1+dp);
+    NewErrorVector = computeImageErrors(KMatrix, RotAxis, Translation,...
+        Correspond, BestConsensus); 
+    RotAxis(j) = RotAxis(j)/(1+dp);
+    FrameJacob(j,:) = (NewErrorVector - ErrorVector)/dp/RotAxis(j);
+
+end
 
 % Now create the three jacobian components from the translation coordinates
 % For x-coordinate
@@ -121,7 +140,6 @@ Translation = OrigTranslation;
 % Transpose matrices for output
 KMatJacob = KMatJacob';
 FrameJacob = FrameJacob';
-size(FrameJacob)
 
 %{
 Change each element of kmatrix, angle axis and translation by some small amount
