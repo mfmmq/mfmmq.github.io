@@ -15,11 +15,10 @@ function [ErrorVector] = computeImageErrors(KMatrix, RotAxis, Translation, ...
 
 % Some input checks
 % Correspond and Consensus should be the same size
+
 if size(Correspond) ~= size(BestConsensus)
     error('Correspond and Consensus wrong size');
 end
-%~~~~~~~~~~~~~~~~~~~!)#(!)#()!@*$)#@*%(#@*$%(@#*$%_(#@*$_(%!*@_($#*!_%(*
-
 
 % First unencode the shifted angle-axis representation of the rotation
 % The angle-axis representation is a scalar angle multiplied by the
@@ -52,7 +51,7 @@ c = 1;
 % Go through Correspond points and see if it matches with Consensus
 % If points match, set OriginalPoints. else, leave value at 0
 for i = 1:s(2)
-    if BestConsensus(i) ~= 0
+    %if BestConsensus(i) ~= 0
         % if a consensus point, add it to points for comparison to actual
         % points
         OriginalPoints(:,c) = [ ...
@@ -66,7 +65,7 @@ for i = 1:s(2)
             Correspond(2,BestConsensus(i))
             ];
         c = c+1;
-    end
+    %end
 end
 
 % Cut off extra zeros

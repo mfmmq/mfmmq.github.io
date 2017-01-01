@@ -133,7 +133,6 @@ Translation(3) = OrigTranslation(3)*(1+dp);
 NewErrorVector = computeImageErrors(KMatrix, RotAxis, Translation,...
     Correspond, BestConsensus); 
 FrameJacob(6,:) = (NewErrorVector - ErrorVector)/dp/Translation(3);
-Translation = OrigTranslation;
 
 
 

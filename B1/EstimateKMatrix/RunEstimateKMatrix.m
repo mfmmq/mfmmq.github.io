@@ -70,7 +70,7 @@ for CalImage = 1:nImages
         % 6. Add in some outliers by replacing [u v]' with a point
         % somewhere else in the image
         % Define the outlier probability
-        pOutlier = 0.05;
+        pOutlier = 0.00;
         for j = 1:length(Correspond)
             r = rand;
             if r < pOutlier 
@@ -123,7 +123,7 @@ end
 % Find the kernel
 [U,D,V] = svd(Regressor,'econ');
 D = diag(D);
-[M,I] = min(D);
+[~,I] = min(D);
 % K is the estimate of the kernel
 K = V(:,I);
 
@@ -148,10 +148,8 @@ Phi(3,3) = K(6);
 Phi(2,1) = Phi(1,2);
 Phi(3,1) = Phi(1,3);
 Phi(3,2) = Phi(2,3);
-Phi
 % Check if matrix is positive definite
 e = eig(Phi);
-e
 for j = 1:3
     if e(j) <= 0
         error('The Cholesky product is not positive definite')

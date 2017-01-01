@@ -35,7 +35,7 @@ if size(InitialKMatrix) ~= [3,3]
     error('KMatrix size is incorrect');
 end
 if abs(InitialKMatrix(2,1))+abs(InitialKMatrix(3,1))+abs(InitialKMatrix(3,2)) ~= 0
-    error('Nonzero in bottom zero of KMatrix');
+    error('Nonzero in bottom triangular of KMatrix');
 end
 % Check data size, make sure everything is there
 [~,s] = size(Data);
@@ -110,7 +110,7 @@ for nHomog = 1:nImages
     [V,D] = eig(RotMat);
     D = diag(D);
     % I will be the real vector
-    [M,I] = max(real(D));
+    [~,I] = max(real(D));
     RotAxis = real(V(:,I));
     RotAxis = RotAxis / norm(RotAxis);
     
@@ -175,7 +175,6 @@ for j = 1:nImages
         singleImageJacobian( KMatrix, ...
         FrameParameters{j,NANGLE}, FrameParameters{j,NTRANSLATION},...
         Data{j,NCORRESPOND}, Data{j,NCONSENSUS});
-    OptComponents{j,NKMATJACOB}(1:100)
     
     
     % The top 5x5 block is the sum of all the inner products of the
@@ -214,7 +213,7 @@ nu = 2;
 % Now perform the optimisation
 Searching = 1; % Toggle for searching, 1 is keep searching
 Iterations = 0; % Initialise Iterations counter
-MaxIterations = 100;
+MaxIterations = 150;
 while Searching == 1
     
     Iterations = Iterations + 1;

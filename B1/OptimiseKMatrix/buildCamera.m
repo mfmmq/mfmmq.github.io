@@ -24,19 +24,26 @@ arg_in(2) = 700;
 
 CameraWidth = arg_in(1);
 CameraHeight = arg_in(2);
+%{
 arg_in(3) = 50;
 arg_in(4) = 500/10000;
 arg_in(5) = 600/10000;
 arg_in(6) = .1;
 arg_in(7) = 30/100;
 arg_in(8) = 70/100;
-
+%}
 
 
 
 KMatrix = singleVectorCameraModel(arg_in);
 
+KMatrix = [
+        5000           0         500
+           0        5000         500
+           0           0           1]
 
+CameraWidth = 1500;
+CameraHeight = 1000;
 
 end
 

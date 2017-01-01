@@ -15,10 +15,6 @@ GridCorners = [-GridWidth/2 -GridWidth/2 GridWidth/2 GridWidth/2; ...
     0 0 0 0;
     1 1 1 1];
 
-GridCorners1 = [0 0 GridWidth GridWidth; ...
-    GridWidth 0 GridWidth 0;
-    0 0 0 0;
-    1 1 1 1 ];
 
 % Compute the positions of the GridCorners in the world 
 GridCorners = T_ow * GridCorners;

@@ -1,5 +1,17 @@
-% This script performs a full estimation and optimisation of a camera
-% K-Matrix
+function [KMatrix,KMatEstimated,OptKMatrix] = testOptimiseKMatrix(arg_in)
+%testOptimiseKMatrix
+% This script is a test handle of the original RunOptimiseKMatrix. It is
+% meant for testing the speed and accuracy of the function by making it
+% easier to change values in the original script
+% var_in is a temporary catch-all for all input variables. It will be
+% changed once important variables are set
+
+
+RansacRuns = arg_in(1); % Number of runs when creating consensus set
+
+
+% Notes for the original RunOptimiseKMatrix script
+% It performs a full estimation and optimisation of a camera K-Matrix. 
 %
 % 1. Construct a camera model loosely based on an iPhone6
 % 2. Construct a calibration grid 1m on a side iwth 10mm grid spacing
@@ -74,8 +86,8 @@ for CalImage = 1:nImages
             CalibrationGrid, KMatrix, CameraHeight,CameraWidth);
         
         % 6. Add in some outliers by replacing [u v]' with a point
-        % somewhere else in the image
-        pOutlier = 0.0; % Defining outlier probability
+        % somewhere else in teh image
+        pOutlier = 0.05; % Defining outlier probability
         for j = 1:length(Correspond)
             r = rand;
             if r < pOutlier
@@ -102,7 +114,6 @@ for CalImage = 1:nImages
         %
         % Note: the above is in pixels, needs to be scaled before RANSAC
         
-        RansacRuns = 500; % Number of runs when creating consensus set
         [Homog, BestConsensus] = ...
             ransacHomog(Correspond,MaxError*CameraScale,RansacRuns);
         
@@ -125,7 +136,7 @@ Regressor = zeros(2*nImages,6);
 for CalImage = 1:nImages
     r1 = 2*CalImage-1;
     r2 = 2*CalImage;
-    Regressor(r1:r2,:) = kMatrixRowPair(HomogData{CalImage,1});
+    Regressor(r1:r2,:) = KMatrixRowPair(HomogData{CalImage,1});
 end
 
 % Find the kernel
@@ -185,15 +196,14 @@ KMatEstimated = KMatEstimated / KMatEstimated(3,3);
 % Optimise the K-matrix
 OptKMatrix = optimiseKMatrix(KMatEstimated,HomogData);
 % Add 1.0 to the translation part of the image
-KMatrix
 KMatEstimated(1,3) = KMatEstimated(1,3) + 1;
 KMatEstimated(2,3) = KMatEstimated(2,3) + 1;
 
 % Rescale back to pixels
 KMatEstimated(1:2,1:3) = KMatEstimated(1:2,1:3) / CameraScale;
-KMatEstimated
 OptKMatrix(1,3) = OptKMatrix(1,3)+1;
 OptKMatrix(2,3) = OptKMatrix(2,3)+1;
-OptKMatrix(1:2,1:3) = OptKMatrix(1:2,1:3)/CameraScale
+OptKMatrix(1:2,1:3) = OptKMatrix(1:2,1:3)/CameraScale;
 
+end
     

@@ -26,6 +26,9 @@ n = length(Correspond);
 Homog = zeros(3);
 % The number of points in the best consensus
 nBest = 0;
+% Allocate space for the regressor and the data
+Regressor = zeros(8);
+DataVec = zeros(8,1);
 
 for Runs = 1:NRuns
     RankTest = 1;
@@ -64,18 +67,14 @@ for Runs = 1:NRuns
             end
         end
         
-        
-        % 2. Allocate space for the regressor and the data
-        Regressor = zeros(8);
-        DataVec = zeros(8,1);
-        
+        % 2. Generate regression and data vector 
         % Fill in the regressor and data vector given the samples to take
         for j = 1:4
             % Row indices into the matrix and vector for this data point
             r1 = j*2 -1;
             r2 = j*2;
             [Regressor(r1:r2,:), DataVec(r1:r2)] = ... 
-                HomogRowPair(Correspond(:,SamplePoints(j)));
+                homogRowPair(Correspond(:,SamplePoints(j)));
         end
         
         
@@ -109,8 +108,7 @@ for Runs = 1:NRuns
                     HomogenousPoint(3);
                 
                 ThisError = norm(HomogenousPoint(1:2) ... 
-                    - [Correspond(1,j);Correspond(2,j)]);
-%                 MaxError
+                    - [Correspond(1,j);Correspond(2,j)]); % ---------------------------------------- time spent here
                 
                 if ThisError < MaxError
                     nCurrent = nCurrent + 1;
@@ -122,8 +120,7 @@ for Runs = 1:NRuns
             % 5. check how well sample did
             if nCurrent > nBest 
                 nBest = nCurrent;
-                %BestConsensus = CurrentConsensus(1:nCurrent);
-                BestConsensus = CurrentConsensus;
+                BestConsensus = CurrentConsensus(1:nCurrent);
             end
             
         else
@@ -152,7 +149,7 @@ if nBest > 0
 %         jbestconsensus = BestConsensus(j)
 %         sizecorres = size(Correspond(:,BestConsensus(j)))
         [Regressor(r1:r2,:),DataVec(r1:r2)] = ...
-            HomogRowPair(Correspond(:,BestConsensus(j)));
+            homogRowPair(Correspond(:,BestConsensus(j)));
     end
     
     % Find the singular value decomposition in order to compute the robust

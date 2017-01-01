@@ -61,7 +61,7 @@ CorrespondencePass = CorrespondencePass(1:2,:);
 
 
 % Generate noise with variation of 0.5 pixels and matlab function randn 
-CorrespondencePass = CorrespondencePass + 0.5 * randn(size(CorrespondencePass));
+CorrespondencePass = CorrespondencePass + 0.0 * randn(size(CorrespondencePass));
 
 Correspond(1:2,:) = CorrespondencePass;
 
