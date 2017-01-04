@@ -53,7 +53,8 @@ CorrespondencePass = KMatrix * CorrespondencePass(1:3,:);
 % Need to normalise points to get 2D points
 s = size(CorrespondencePass);
 for j = 1:s(2) 
-    CorrespondencePass(1:2,j) = CorrespondencePass(1:2,j) / CorrespondencePass(3,j);
+    CorrespondencePass(1:2,j) = CorrespondencePass(1:2,j) /...
+        CorrespondencePass(3,j);
 end
 
 % Throw away normalising components

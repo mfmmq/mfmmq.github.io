@@ -66,6 +66,7 @@ for CalImage = 1:nImages
         T_cw = fillImage(T_ow, KMatrix, GridWidth, ...
             CameraHeight, CameraWidth);
         
+        
         % 5. Now fill camera with a noisy image of the grid and generate
         % the point correspondences
         % Correspond is a set of pairs of vectors of the form [[u v]' [x
@@ -73,9 +74,10 @@ for CalImage = 1:nImages
         Correspond = buildNoisyCorrespondence(T_ow,T_cw, ...
             CalibrationGrid, KMatrix, CameraHeight,CameraWidth);
         
+        
         % 6. Add in some outliers by replacing [u v]' with a point
         % somewhere else in the image
-        pOutlier = 0.0; % Defining outlier probability
+        pOutlier = 0.05; % Defining outlier probability
         for j = 1:length(Correspond)
             r = rand;
             if r < pOutlier
@@ -84,12 +86,11 @@ for CalImage = 1:nImages
             end
         end
         
-        
-        
         % Now scale grid and camera to [-1,1] to improve the conditioning
         % of the Homography estimation
         Correspond(1:2,:) = Correspond(1:2,:)*CameraScale - 1.0;
         Correspond(3:4,:) = Correspond(3:4,:)*GridScale;
+        
         
         % 7. Perform the RANSAC estimation
         % If the Ransac fails it returns a zero homography
@@ -111,7 +112,6 @@ for CalImage = 1:nImages
             HomogData{CalImage,NHOMOGRPAHY} = Homog;
             HomogData{CalImage,NCORRESPOND} = Correspond;
             HomogData{CalImage,NCONSENSUS} = BestConsensus;
-
         else
             % Estimate failed, try again
             Estimating = 1;
@@ -176,7 +176,6 @@ KMatEstimated = KMatEstimated \ eye(3);
 % scaling has an impact
 
 % First normalise the K-matrix
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%CHcke for eps here?
 if KMatEstimated(3,3) < eps
     error('Could not normalise the estimated K-matrix');
 end
@@ -196,4 +195,52 @@ OptKMatrix(1,3) = OptKMatrix(1,3)+1;
 OptKMatrix(2,3) = OptKMatrix(2,3)+1;
 OptKMatrix(1:2,1:3) = OptKMatrix(1:2,1:3)/CameraScale
 
-    
+
+
+% Use KMatrix and OptKMatrix to plot the grid in the camera frame and
+% visually examine
+
+% Original grid coordinates can be found by using the original KMatrix
+
+clf
+Points = T_ow * CalibrationGrid;
+Points = T_cw \ Points;
+Original = KMatrix * Points(1:3,:);
+s = size(Original);
+for j = 1:s(2) 
+    Original(1:2,j) = Original(1:2,j) /...
+        Original(3,j);
+end
+
+% Grid coordinates with noise
+Noise = (Correspond(1:2,:)+1)/CameraScale;
+
+% Grid camera image from OptKMatrix
+Optimised = OptKMatrix*Points(1:3,:);
+for j = 1:s(2) 
+    Optimised(1:2,j) = Optimised(1:2,j) /...
+        Optimised(3,j);
+end
+
+figure(1)
+plot(Original(1,:),Original(2,:),'*','LineStyle','none');
+axis ij
+xlim([0 CameraWidth])
+ylim([0 CameraHeight])
+figure(2)
+plot(Noise(1,:),Noise(2,:),'+','LineStyle','none');
+axis ij
+xlim([0 CameraWidth])
+ylim([0 CameraHeight])
+figure(3)
+plot(Optimised(1,:),Optimised(2,:),'o','LineStyle','none');
+axis ij
+xlim([0 CameraWidth])
+ylim([0 CameraHeight])
+
+
+
+
+
+
+

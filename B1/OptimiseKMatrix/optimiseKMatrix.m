@@ -223,7 +223,9 @@ while Searching == 1
     end
     
     % 3. Test for convergence - choose a size for the gradient
-    if norm(Gradient)/ProblemSize < 0.01
+    % Weigh the elements of the derivative before computing the norm
+    WeightedGradient = Gradient;
+    if norm(WeightedGradient)/ProblemSize < 0.01
         break; % Leave the loop
     end
     

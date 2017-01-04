@@ -18,6 +18,8 @@ arg_in(8) = randi([25, 75])/100;    % y_offset, principle pt offset in y frac
 
 % Define camera size
 % How to properly define these?
+arg_in(1) = 1200;
+arg_in(2) = 800;
 CameraHeight = arg_in(2);
 CameraWidth = arg_in(1);
 

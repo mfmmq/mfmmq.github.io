@@ -16,34 +16,16 @@ arg_in(6) = randi([-1, 1])/10;      % skew, skewness in xpixels
 arg_in(7) = randi([25, 75])/100;    % x_offset, principle pt offset in x frac
 arg_in(8) = randi([25, 75])/100;    % y_offset, principle pt offset in y frac
 
-% Define camera size
-% How to properly define these?
+% Set camera size
 arg_in(1) = 1200;
 arg_in(2) = 700;
 
-
 CameraWidth = arg_in(1);
 CameraHeight = arg_in(2);
-%{
-arg_in(3) = 50;
-arg_in(4) = 500/10000;
-arg_in(5) = 600/10000;
-arg_in(6) = .1;
-arg_in(7) = 30/100;
-arg_in(8) = 70/100;
-%}
 
-
-
+% Build the k-matrix with random input arguments within range
 KMatrix = singleVectorCameraModel(arg_in);
 
-KMatrix = [
-        5000           0         500
-           0        5000         500
-           0           0           1]
-
-CameraWidth = 1500;
-CameraHeight = 1000;
 
 end
 

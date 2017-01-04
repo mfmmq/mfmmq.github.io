@@ -14,11 +14,7 @@ function [ErrorVector] = computeImageErrors(KMatrix, RotAxis, Translation, ...
 
 
 % Some input checks
-% Correspond and Consensus should be the same size
-
-if size(Correspond) ~= size(BestConsensus)
-    error('Correspond and Consensus wrong size');
-end
+% !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
 
 % First unencode the shifted angle-axis representation of the rotation
 % The angle-axis representation is a scalar angle multiplied by the
@@ -73,7 +69,8 @@ s(2) = c-1;
 OriginalPoints = OriginalPoints(:,1:s(2));
 ActualPoints = ActualPoints(:,1:s(2));
 
-% Transform the OriginalPoints to find where they 'should be'
+% Transform the OriginalPoints from grid coordinates to find their 
+% predicted position in 
 
 PredictedPoints = Transformation * OriginalPoints;
 PredictedPoints = KMatrix * PredictedPoints(1:3,:);

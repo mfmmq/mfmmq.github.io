@@ -1,23 +1,42 @@
-function [Stage] = runCompressor(Stage, Stream, Parameters)
+function [State] = runCompressor(State,Parameter,Constant)
 %runCompressor
 
-% Pass variables
-T2 = Stage.T2;
-P2 = Stage.P2;
-CPR = Parameters.CPR;
-gamma = Parameters.gamma;
-cp = Parameters.cp;
-Nu_c = Parameters.Nu_c;
-ma = Stream.ma;
 
 
-% For isentropic compression
-Stage.P3 = P2*CPR;     % Pressure in bar 
+% COMPRESSOR MODEL DEFINITION
+%--------------------------------------------------------------------------
+Nu_c = 0.85;    % Isentropic efficiency
+CPR = 20;       % Pressure ratio
 
-% Calculate work done by compressor (negative number)
-Stage.W23 = cp * T2 * (1-CPR^((gamma-1)/gamma))/Nu_c;
 
+% STATE CONDITIONS AND CONSTANTS
+%--------------------------------------------------------------------------
+% Pass variables from input State structure
+p2 = State(2,2);
+t2 = State(2,3);
+h2 = State(2,4);
+gamma = Constant.gamma;
+cp = Constant.cp;
+
+
+
+% COMPRESSOR CALCULATIONS
+%--------------------------------------------------------------------------
+
+p3 = p2 * CPR; % New pressure defined by compressor pressure ratio
+
+% Specific work done by compressor defined by isentropic efficiency
+w23 = cp * t2 * (1-CPR^((gamma-1)/gamma))/Nu_c;
+h3 = w23 + h2;
 % Calculate new temperature by using work done equals change in enthalpy
-Stage.T3 = T2 - Stage.W23;
+t3 = t2 - w23/cp;
+
+
+State(3,1) = 3;
+State(3,2) = p3;
+State(3,3) = t3;
+State(3,4) = h3;
+
+
 
 end
