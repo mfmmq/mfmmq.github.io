@@ -15,7 +15,7 @@ function [ KMatJacob, FrameJacob ] = singleImageJacobian( ...
 
 
 
-dp = 0.001;                    % Small amount to scale each parameter by
+dp = 0.001;                     % Small amount to scale each parameter by
 KMatrix = OrigKMatrix;          % Initalise KMatrix
 RotAxis = OrigRotAxis;          % Initialise angle-axis representation
 Translation = OrigTranslation;  % Initialise translation
@@ -26,9 +26,9 @@ Translation = OrigTranslation;  % Initialise translation
 ErrorVector = computeImageErrors(KMatrix, RotAxis, Translation, ...
     Correspond, BestConsensus);
 
-s = size(ErrorVector);           % For preallocating matrix
-FrameJacob = zeros(6,s(1));   % Initialise FrameJacob
-KMatJacob = zeros(5,s(1));    % Initialise KMatJacob
+s = size(ErrorVector);          % For preallocating matrix
+FrameJacob = zeros(6,s(1));     % Initialise FrameJacob
+KMatJacob = zeros(5,s(1));      % Initialise KMatJacob
 
 
 
