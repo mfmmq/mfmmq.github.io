@@ -41,7 +41,7 @@ KMatIndex = [1 4 7 5 8]; % Locations of elements to perturb
 for i = 1:5
     %initialkmatval = KMatrix(KMatIndex(i))
     Step =  KMatrix(KMatIndex(i)) * dp;
-    if (Step <= eps)
+    if (Step <= 0.001)
        % fprintf('Small change in parameter, setting to small step\r')
         Step = 0.001;
     end
@@ -74,37 +74,6 @@ end
 OrigAngle = norm(OrigRotAxis); 
 OrigAxis = OrigRotAxis/OrigAngle; % Divide by angle to get unit axis vector
 
-
-
-
-% Calculate the jacobian component for angle perturbation
-%{
-RotAxis = OrigRotAxis*(1+dp); % Perturb the angle by scalar dp
-NewErrorVector = computeImageErrors(KMatrix, RotAxis, Translation,...
-    Correspond, BestConsensus); 
-FrameJacob(1,:) = (NewErrorVector - ErrorVector)/dp/Angle;
-%}
-
-% Add the axis perturbation jacobian component
-%{
-Axis = [1+dp;1;1].*OrigAxis;
-RotAxis = OrigAngle*Axis/norm(Axis); % Create angle-axis representation
-NewErrorVector = computeImageErrors(KMatrix, RotAxis, Translation,...
-    Correspond, BestConsensus); 
-FrameJacob(1,:) = (NewErrorVector - ErrorVector)/dp/Axis(1);
-
-Axis = [1;1+dp;1].*OrigAxis;
-RotAxis = OrigAngle*Axis/norm(Axis); % Create angle-axis representation
-NewErrorVector = computeImageErrors(KMatrix, RotAxis, Translation,...
-    Correspond, BestConsensus); 
-FrameJacob(2,:) = (NewErrorVector - ErrorVector)/dp/Axis(2);
-
-Axis = [1;1;1+dp].*OrigAxis;
-RotAxis = OrigAngle*Axis/norm(Axis); % Create angle-axis representation
-NewErrorVector = computeImageErrors(KMatrix, RotAxis, Translation,...
-    Correspond, BestConsensus); 
-FrameJacob(3,:) = (NewErrorVector - ErrorVector)/dp/Axis(3);
-%}
 
 for j = 1:3
     RotAxis(j) = RotAxis(j) * (1+dp);

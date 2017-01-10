@@ -70,8 +70,7 @@ OriginalPoints = OriginalPoints(:,1:s(2));
 ActualPoints = ActualPoints(:,1:s(2));
 
 % Transform the OriginalPoints from grid coordinates to find their 
-% predicted position in 
-
+% predicted position 
 PredictedPoints = Transformation * OriginalPoints;
 PredictedPoints = KMatrix * PredictedPoints(1:3,:);
 for i = 1:s(2)

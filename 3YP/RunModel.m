@@ -1,3 +1,4 @@
+function [w_out] = RunModel()
 %RunModel.m
 
 
@@ -8,25 +9,25 @@
 % Define some physical constants which we have assumed to be constant.
 % These should be replaced later with more accurate representations that
 % vary with temperature, etc
-Constant = struct;    % Define a structure for constants
+Constant = struct;       % Define a structure for constants
 Constant.gamma = 1.4;    % Specific heat ratio
 Constant.cp = 1.005;     % Specific heat at constant pressure, kJ/kgK
 Parameter = struct;
 
 % Initialise a matrix to carry state information
 % The matrix is structured with each row representing a different stage
-% [StageNumber StagePressure StageTemp Enthalpy MassFlowAir]
+% [StageNumber FlowRate StagePressure StageTemp Enthalpy]
 % All pressures should be in bar, all temperature should be in K, specific
 % volume should be in m3/kg, enthalpy is kJ/kg, entropy is kJ/kgK
 % Missing values should be flagged with -999
-State = zeros(7,4);
+State = zeros(7,5);
 
 
 
 % Define atmospheric conditions
 p_atm = 1.013;          % Atmospheric pressure in bar
 t_atm = 298;            % Atmospheric pressure in Kelvin
-State(1,:) = [1 1.013 298 0 1]; % Add to stage
+State(1,:) = [1 1 p_atm t_atm 0]; % Add to stage
 
 %{
 % Design parameters
@@ -49,19 +50,46 @@ m = mf+ma;      % Total mass flow rate
 
 
 
-% INLET CONDITIONS
+% Run a 1:1 mix of fuel and air for simplicity
+
+
+% INLET CONDITIONS (1-2)
 %--------------------------------------------------------------------------
 State(2,:) = State(1,:);
 State(2,1) = 2;
 
 
+% COMPRESSION (2-3)
+%--------------------------------------------------------------------------
 % Run the compressor
 State = runCompressor(State,Parameter,Constant);
 
+
+% COMBUSTION (3-4)
+%--------------------------------------------------------------------------
 % Burner
 State = runBurner(State,Parameter,Constant);
 
 
 
+% EXPANSION (4-5)
+%--------------------------------------------------------------------------
+% Run the turbine
+State = runTurbine(State,Parameter,Constant);
+
+
+% POST-PROCESSING
+%--------------------------------------------------------------------------
+% Something about checking NOx emissions and doing some cogen
+
+
+
+% POWER GENERATION 
+%--------------------------------------------------------------------------
+% Run the generator
+%runGenerator();
+
+
+w_out = State(5,5)-State(4,5) + State(3,5)-State(2,5) 
 
 
