@@ -33,5 +33,18 @@ xlabel('Number of RANSAC Runs');
 ylabel('KMatrix Cost');
 title('RANSAC Runs vs Cost');
 
-%figure(4)
-%subplot(1,3);
+figure(4)
+subplot(1,2,1);
+
+plot(Runs,Time,'o')
+xlabel('Number of RANSAC Runs');
+ylabel('ransacHomog Runtime (s)');
+title('RANSAC Runs vs Time');
+xlim([0 110])
+
+subplot(1,2,2);
+plot(Runs,Error,'o')
+xlabel('Number of RANSAC Runs');
+ylabel('KMatrix Error');
+title('RANSAC Runs vs Error');
+xlim([0 110])
