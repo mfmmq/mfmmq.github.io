@@ -136,7 +136,7 @@ Regressor = zeros(2*nImages,6);
 for CalImage = 1:nImages
     r1 = 2*CalImage-1;
     r2 = 2*CalImage;
-    Regressor(r1:r2,:) = KMatrixRowPair(HomogData{CalImage,1});
+    Regressor(r1:r2,:) = kMatrixRowPair(HomogData{CalImage,1});
 end
 
 % Find the kernel

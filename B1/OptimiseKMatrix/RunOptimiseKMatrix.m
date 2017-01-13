@@ -1,3 +1,4 @@
+%RunOptimiseKMatrix
 % This script performs a full estimation and optimisation of a camera
 % K-Matrix
 %
@@ -103,7 +104,7 @@ for CalImage = 1:nImages
         %
         % Note: the above is in pixels, needs to be scaled before RANSAC
         
-        RansacRuns = 500; % Number of runs when creating consensus set
+        RansacRuns = 50; % Number of runs when creating consensus set
         [Homog, BestConsensus] = ...
             ransacHomog(Correspond,MaxError*CameraScale,RansacRuns);
         
@@ -223,24 +224,41 @@ for j = 1:s(2)
 end
 
 figure(1)
-plot(Original(1,:),Original(2,:),'*','LineStyle','none');
+plot(Original(1,:),Original(2,:),'.','LineStyle','none');
 axis ij
 xlim([0 CameraWidth])
 ylim([0 CameraHeight])
 figure(2)
-plot(Noise(1,:),Noise(2,:),'+','LineStyle','none');
+plot(Noise(1,:),Noise(2,:),'.','LineStyle','none');
 axis ij
 xlim([0 CameraWidth])
 ylim([0 CameraHeight])
 figure(3)
-plot(Optimised(1,:),Optimised(2,:),'o','LineStyle','none');
+plot(Optimised(1,:),Optimised(2,:),'.','LineStyle','none');
 axis ij
 xlim([0 CameraWidth])
 ylim([0 CameraHeight])
 
 
 
-
-
+figure(4)
+subplot(1,3,1)
+plot(Original(1,:),Original(2,:),'.','LineStyle','none');
+axis ij
+xlim([0 CameraWidth])
+ylim([0 CameraHeight])
+title('Original KMatrix Image')
+subplot(1,3,2)
+plot(Noise(1,:),Noise(2,:),'.','LineStyle','none');
+axis ij
+title('Noisey K-Matrix Image');
+xlim([0 CameraWidth])
+ylim([0 CameraHeight])
+subplot(1,3,3)
+plot(Optimised(1,:),Optimised(2,:),'.','LineStyle','none');
+axis ij
+xlim([0 CameraWidth])
+ylim([0 CameraHeight])
+title('Optimised K-Matrix Image')
 
 

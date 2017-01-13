@@ -110,10 +110,13 @@ for Runs = 1:NRuns
                 ThisError = norm(HomogenousPoint(1:2) ... 
                     - [Correspond(1,j);Correspond(2,j)]); % ---------------------------------------- time spent here
                 
+                %ThisError_2 = 
+                
                 if ThisError < MaxError
                     nCurrent = nCurrent + 1;
                     CurrentConsensus(nCurrent) = j;
-                end    
+                end
+                
             end
             
             

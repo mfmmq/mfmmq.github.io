@@ -25,7 +25,13 @@ CameraHeight = arg_in(2);
 
 % Build the k-matrix with random input arguments within range
 KMatrix = singleVectorCameraModel(arg_in);
-
+%{
+KMatrix = [
+    2.1655         0    0.6360
+         0    1.0773    0.5110
+         0         0    0.0010];
+KMatrix = KMatrix * 1000;
+%}
 
 end
 

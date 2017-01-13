@@ -1,6 +1,7 @@
 function [ErrorVector] = computeImageErrors(KMatrix, RotAxis, Translation, ...
     Correspond, BestConsensus)
-%computeImageErrors calculates the error vector e using the current set of
+%computeImageErrors
+% calculates the error vector e using the current set of
 %
 % KMatrix is the camera model
 % RotAxis is the axis angle representation
@@ -90,3 +91,4 @@ for i = 1:s(2)
     ErrorVector(i+s(2)) = PredictedPoints(2,i)-ActualPoints(2,i);
 end
 
+end

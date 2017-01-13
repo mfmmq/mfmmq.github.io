@@ -1,9 +1,11 @@
 function [ KMatJacob, FrameJacob ] = singleImageJacobian( ...
     OrigKMatrix, OrigRotAxis, OrigTranslation, Correspond, BestConsensus)
-%singleImageJacobian computes the Jacobian
+%singleImageJacobian
+%Computes the Jacobian
 %The Jacobian is calculated for the group of 6 parameters for the image,
 %the 3 rotations and translations per image
-%
+
+
 % Jacobian is calculated by using the forward difference approximation by
 % changing each variable by a small amount, computing the new position
 % error, and dividing by the change in parameter
@@ -15,7 +17,7 @@ function [ KMatJacob, FrameJacob ] = singleImageJacobian( ...
 
 
 
-dp = 0.001;                     % Small amount to scale each parameter by
+dp = 0.1;                     % Small amount to scale each parameter by
 KMatrix = OrigKMatrix;          % Initalise KMatrix
 RotAxis = OrigRotAxis;          % Initialise angle-axis representation
 Translation = OrigTranslation;  % Initialise translation
@@ -41,9 +43,9 @@ KMatIndex = [1 4 7 5 8]; % Locations of elements to perturb
 for i = 1:5
     %initialkmatval = KMatrix(KMatIndex(i))
     Step =  KMatrix(KMatIndex(i)) * dp;
-    if (Step <= 0.001)
+    if (Step <= eps)
        % fprintf('Small change in parameter, setting to small step\r')
-        Step = 0.001;
+        Step = 0.00001;
     end
     KMatrix(KMatIndex(i)) = KMatrix(KMatIndex(i)) + Step;
     %Kmatindexval = KMatrix(KMatIndex(i))

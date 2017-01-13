@@ -200,13 +200,23 @@ for j = 1:nImages
         OptComponents{j,NKMATJACOB}'*OptComponents{j,NERRORVECTOR};
     Gradient(StartRow:EndRow) = OptComponents{j,NFRAMEJACOB}'*...
         OptComponents{j,NERRORVECTOR};
+    
+    for a = 1:nImages
+        WeightedGradient(1) = Gradient(1)/KMatrix(1);
+        WeightedGradient(2) = Gradient(2)/KMatrix(4);
+        WeightedGradient(3) = Gradient(3)/KMatrix(7);
+        WeightedGradient(4) = Gradient(4)/KMatrix(5);
+        WeightedGradient(5) = Gradient(5)/KMatrix(8);
+        WeightedGradient(StartRow:EndRow) = Gradient(StartRow:EndRow);
+    end
 
 end
 
 % The inital value of mu
 mu = max(diag(JTransposeJ)) * 0.1;
+intial_mu = mu;
 
-% The initial value of th eexponential growth factor nu
+% The initial value of the eexponential growth factor nu
 % This variable is used to increase mu if the error goes up
 nu = 2;
 
@@ -224,12 +234,14 @@ while Searching == 1
     
     % 3. Test for convergence - choose a size for the gradient
     % Weigh the elements of the derivative before computing the norm
-    WeightedGradient = Gradient;
-    if norm(WeightedGradient)/ProblemSize < 0.01
+    % Kmatrix block is in 
+    %if norm(WeightedGradient)/ProblemSize < 0.01
+    if norm(Gradient,Inf)/ProblemSize < 0.01
         break; % Leave the loop
     end
     
     % 4. Solve for the change to parameters
+    %mu = intial_mu;
     dp = -(JTransposeJ + mu*eye(ProblemSize)) \ Gradient;
     
     % 5.
@@ -341,6 +353,15 @@ while Searching == 1
                 OptComponents{j,NKMATJACOB}'*OptComponents{j,NERRORVECTOR};
             Gradient(StartRow:EndRow) = OptComponents{j,NFRAMEJACOB}'* ...
                 OptComponents{j,NERRORVECTOR};
+        end
+        % Weigh the gradient
+        for j = 1:nImages
+            WeightedGradient(1) = Gradient(1)/KMatrix(1);
+            WeightedGradient(2) = Gradient(2)/KMatrix(4);
+            WeightedGradient(3) = Gradient(3)/KMatrix(7); 
+            WeightedGradient(4) = Gradient(4)/KMatrix(5);
+            WeightedGradient(5) = Gradient(5)/KMatrix(8);
+            WeightedGradient(StartRow:EndRow) = Gradient(StartRow:EndRow);
         end
         
     end
