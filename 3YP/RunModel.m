@@ -1,90 +1,111 @@
-function [w_out] = RunModel()
+%function [w_out] = RunModel()
 %RunModel.m
 
-
-% INITIAL CONDITIONS
+% LOAD DATA
 %--------------------------------------------------------------------------
-
-% Physical constants
-% Define some physical constants which we have assumed to be constant.
-% These should be replaced later with more accurate representations that
-% vary with temperature, etc
-Constant = struct;       % Define a structure for constants
-Constant.gamma = 1.4;    % Specific heat ratio
-Constant.cp = 1.005;     % Specific heat at constant pressure, kJ/kgK
-Parameter = struct;
-
 % Initialise a matrix to carry state information
 % The matrix is structured with each row representing a different stage
 % [StageNumber FlowRate StagePressure StageTemp Enthalpy]
 % All pressures should be in bar, all temperature should be in K, specific
 % volume should be in m3/kg, enthalpy is kJ/kg, entropy is kJ/kgK
 % Missing values should be flagged with -999
-State = zeros(7,5);
+State = zeros(5,5);
 
+% Import gas table structures
+load('NH3.mat');
+load('O2.mat');
+load('N2.mat');
+load('H2O.mat');
+load('NO.mat');
 
+Data.NH3 = NH3;
+Data.O2 = O2;
+Data.N2 = N2;
+Data.H2O = H2O;
+Data.NO = NO;
+
+% Physical constants
+% Define some physical constants which we have assumed to be constant.
+% These should be replaced later with more accurate representations that
+% vary with temperature, etc
+Constant = struct;          % Define a structure for constants
+Constant.gamma = 1.4;       % Specific heat ratio
+Constant.cp = 1.005;        % Specific heat at constant pressure, kJ/kgK
+
+% Define some parameters of the gas turbine powerplant in a structure
+Parameter = struct;
+Parameter.na = 1;           % 1kmol/s ammonia fuel flow
 
 % Define atmospheric conditions
-p_atm = 1.013;          % Atmospheric pressure in bar
-t_atm = 298;            % Atmospheric pressure in Kelvin
-State(1,:) = [1 1 p_atm t_atm 0]; % Add to stage
-
-%{
-% Design parameters
-CPR = 20;       % Compressor pressure ratio
-%TPR = 10;      % Turbine pressure ratio
-BPR = 0.99;     % Burner pressure ratio, accounting for slight loss
-Nu_c = 0.85;    % Isentropic compressor efficiency
-Nu_t = 0.85;    % Isentropic turbine efficiency
-Nu_b = 0.98;    % Adiabatic burner efficiency
-
-% Inlet conditions
-P1 = 1;         % Inlet pressure, bar
-T1 = 300;       % Inlet temperature, Kelvin
-ma = 1;         % Air mass flow rate, kg/s
-mo = ma/5;      % Oxygen mass flow rate kg/s
-mf = 1;         % Fuel mass flow rate, kg/s
-f = mf/ma;      % Fuel to air flow rate ratio
-m = mf+ma;      % Total mass flow rate 
-%}
+p_atm = 1.000;                   % Atmospheric pressure in bar
+t_atm = 293.13;                  % Atmospheric pressure in Kelvin
 
 
 
-% Run a 1:1 mix of fuel and air for simplicity
+% INITIAL CONDITIONS
+%--------------------------------------------------------------------------
+% Initialise stage 1 variables
+n1 = 1; % 1 kmol/s
+p1 = p_atm;
+t1 = t_atm;
+h1 = n1*findProperty(Data.O2,t1,'Dh');
+
+% Add to the State array
+State(1,:) = [1 n1 p1 t1 h1];
 
 
-% INLET CONDITIONS (1-2)
+
+% INLET
 %--------------------------------------------------------------------------
 State(2,:) = State(1,:);
 State(2,1) = 2;
 
 
+
 % COMPRESSION (2-3)
 %--------------------------------------------------------------------------
 % Run the compressor
-State = runCompressor(State,Parameter,Constant);
+State = runCompressor(State,Parameter,Constant,Data);
+
+
 
 
 % COMBUSTION (3-4)
 %--------------------------------------------------------------------------
-% Burner
-State = runBurner(State,Parameter,Constant);
+% Run the burner
+State = runBurner(State,Parameter,Constant,Data);
+
 
 
 
 % EXPANSION (4-5)
 %--------------------------------------------------------------------------
 % Run the turbine
-State = runTurbine(State,Parameter,Constant);
+State = runTurbine(State,Parameter,Constant,Data);
+
+
 
 
 % POST-PROCESSING
 %--------------------------------------------------------------------------
 % Something about checking NOx emissions and doing some cogen
+% Check NOx emissions
+
+% Run the heat exchanger to partially dissociate the ammonia
+% No state output - output probably not that important?
+runHeatExchanger(State,Parameter,Constant,Data);
+
 
 
 
 % POWER GENERATION 
+%--------------------------------------------------------------------------
+% Run the generator
+%runGenerator();
+
+
+
+% RESULTS CALCULATIONS 
 %--------------------------------------------------------------------------
 % Run the generator
 %runGenerator();
