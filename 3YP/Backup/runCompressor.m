@@ -16,7 +16,6 @@ n2 = State(2,2); % Flow rate in kmol/s
 p2 = State(2,3);
 t2 = State(2,4);
 h2 = State(2,5);
-v2 = State(2,6);
 
 gamma = Constant.gamma;
 
@@ -30,7 +29,8 @@ p3 = p2 * CPR; % New pressure defined by compressor pressure ratio
 
 
 % Calculate specific heat at constant pressure
-cp = 0.8*findProperty(Data.O2,t2,'cp')+0.2*findProperty(Data.N2,t2,'cp');
+%cp = 0.78*findProperty(Data.O2,t2,'cp')+0.22*findProperty(Data.N2,t2,'cp');
+cp = findProperty(Data.O2,t2,'cp');
 
 % Calculate total work done by compressor (defined by isentropic efficiency)
 % Find the resulting enthalpy at stage 4
@@ -48,10 +48,9 @@ t3 = t2 - w23/cp/n3;
 % Use findProperties to see if enthalpy is reasonable
 h3_meas = n3*findProperty(Data.O2,t3,'Dh');
 Margin = h3-h3_meas;
-if abs(Margin) < abs(w23)*0.1
-    fprintf('Compressor successful\r');
-    fprintf('\tCalculated and tabulated enthalpy margin is %d kJ\r', Margin');
-    fprintf('\tCompressor work done %d kJ\r\n',w23);
+if abs(Margin) < h3*0.1
+    fprintf('Compressor successful\r\t(calculated and tabulated enthalpy margin is %d)\r', Margin');
+    fprintf('\tCompressor work done %d\r\n',w23);
 else
     fprintf('Compressor calculated and tabulated enthalpy at Stage3 inconsistent, margin %d\r\n',Margin);
 end
@@ -63,7 +62,6 @@ State(3,2) = n3;
 State(3,3) = p3;
 State(3,4) = t3;
 State(3,5) = h3;
-State(3,6) = 8315*t3*n3/p3/10^5;
 
 end
 

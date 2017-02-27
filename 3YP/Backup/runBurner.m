@@ -1,4 +1,4 @@
-function [State,Parameter] = runBurner(State,Parameter,Constant,Data)
+function [State] = runBurner(State,Parameter,Constant,Data)
 %runCompressor
 
 
@@ -19,6 +19,7 @@ h_c = 18864; % Enthalpy of combustion
 n3 = State(3,2);
 p3 = State(3,3);
 t3 = State(3,4);
+h3 = State(3,5);
 
 na = Parameter.na;
 
@@ -26,22 +27,22 @@ na = Parameter.na;
 % BURNER CALCULATIONS
 %--------------------------------------------------------------------------
 p4 = BPR*p3;
+t4 = 2000;
 
-% Check the equivalence ratio
-% Equivalence ratio is defined as the ratio of fuel:oxidiser to the
-% stochiometric fuel:air ratio
+% Check the equivalence ratio (air:fuel)
 % High equivalence ratios are typically required
-StochioRatio = 4/3;
-FuelOxidiserRatio = na/(n3*0.2);
-ER = FuelOxidiserRatio/StochioRatio;
-if ER < 0.5 || ER > 1.2
-    error('Equivalence ratio %.1f is out of bounds',ER);
-end
-if ER < 0.765 || ER > 1.0125
-    fprintf('Warning, ER is out of interpolation ranges');
+ER = n3/na;
+if ER < 0.4 || ER > 1.2
+    error('Equivalence ratio is out of bounds');
 end
 
 
+h3_NH3 = findProperty(Data.NH3, t3, 'Dh');
+h3_O2 = findProperty(Data.O2, t3, 'Dh');
+h3_N2 = findProperty(Data.N2,t3,'Dh');
+
+% Enthalpy of the reactants relative to h0_r
+%h_r = n3_a*h3_NH3 + 0.2*n3*h3_O2 + 0.8*h3_N2;
 
 
 % Assume all ammonia that can be combusted is combusted and calculate flow 
@@ -61,13 +62,6 @@ end
 n4_N2 = 0.8*n3 + (na-n4_NH3)/2;
 n4_H2O = (na-n4_NH3)/3*2;
 
-
-% Flame temperature is a function of dissociation levels, fuel:air ratio
-% Polynomial exponents found from graph, see logbook
-p = [-2796.21658	5480.260233	-946.2104087];
-t4 = polyval(p,ER) + 273;
-
-
 % Find product enthalpies
 h4_NH3 = findProperty(Data.NH3,t4,'Dh');
 h4_N2 = findProperty(Data.N2, t4,'Dh');
@@ -78,30 +72,26 @@ h4_H2O = findProperty(Data.H2O, t4,'Dh');
 % Calculate new net flow rate
 n4 = n4_NH3 + n4_O2 + n4_N2 + n4_H2O;
 h_p = n4_NH3*h4_NH3 + n4_N2*h4_N2 + n4_O2*h4_O2 + n4_H2O*h4_H2O;
-h4 = h_p;% - h_c*na 
+h4 = h_p;
 
 
 
 if t4 < RedLine
     fprintf('Burner successful\r');
-    fprintf('\tT4 temperature %d K\r',t4);
-    fprintf('\tEquivalence ratio %.1f\r\n',ER);
+    fprintf('\tt4 temperature %d\r\n',t4);
 else
     fprintf('Warning, burner t4 temperature past redline %d\r\n',t4);
 end
 
-% Save component flow rates
-Parameter.n_NH3 = n4_NH3;
-Parameter.n_N2 = n4_N2;
-Parameter.n_O2 = n4_O2;
-Parameter.n_H2O = n4_H2O;
+
+
 
 State(4,1) = 4;
 State(4,2) = n4;
 State(4,3) = p4;
 State(4,4) = t4;
 State(4,5) = h4;
-State(4,6) = 8315*t4*n4/p4/10^5; % Approximate as ideal
+
 
 
 end

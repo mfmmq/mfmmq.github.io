@@ -16,16 +16,12 @@ ta_b = 170+273;
 delta_t = 20;
 
 
-
-
-
 % STATE CONDITIONS AND CONSTANTS
 %--------------------------------------------------------------------------
 % Pass exhaust conditions from the State variable
 ne = State(5,2); % Flow rate in kmol/s
 p5 = State(5,3);
 t5 = State(5,4);
-
 h5 = State(5,5);
 cp = Constant.cp;
 
@@ -45,8 +41,6 @@ ha_b = 0.28*findProperty(Data.H2,ta_b,'Dh') + ...
 na = State(4,2) - State(3,2);
 
 
-
-
 % HEAT EXCHANGER CALCULATIONS
 %--------------------------------------------------------------------------
 
@@ -62,12 +56,13 @@ te_a = te_b + Q/cp/29/ne;
 if ((te_a-ta_a) < delta_t) || (te_a < delta_t+State(1,4))
     error('Temperature difference in the heat exchanger was too small, check exit exhaust temperature')
 end
+
+
 if (te_b - ta_b) < delta_t
     error('Temperature difference in the heat exchanger was too small, check inlet exhaust temperature');
 end
 
-fprintf('Heat exchanger converges\r');
-fprintf('\tTemperature difference at burner inlet %.0f K\r',te_b - ta_b);
+
 
 end
 

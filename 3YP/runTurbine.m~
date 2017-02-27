@@ -38,8 +38,8 @@ cp4_NH3 = findProperty(Data.NH3,t4,'cp');
 cp4_N2 = findProperty(Data.N2, t4,'cp');
 cp4_O2 = findProperty(Data.O2, t4,'cp');
 cp4_H2O = findProperty(Data.H2O, t4,'cp');
-cp_n = n_NH3*cp4_NH3 + n_N2*cp4_N2 + n_O2*cp4_O2 + n_H2O*cp4_H2O;
 
+cp_n = n_NH3*cp4_NH3 + n_N2*cp4_N2 + n_O2*cp4_O2 + n_H2O*cp4_H2O;
 
 % Specific work done by turbine is defined by atmospheric pressure and 
 % isentropic efficiency
@@ -62,6 +62,9 @@ h5_O2 = findProperty(Data.O2, t5,'Dh');
 h5_H2O = findProperty(Data.H2O, t5,'Dh');
 h5_meas = n_NH3*h5_NH3 + n_N2*h5_N2 + n_O2*h5_O2 + n_H2O*h5_H2O;
 
+w45
+h5
+h5_meas
 Margin = h5-h5_meas;
 if abs(Margin) < abs(w45*0.2)
     fprintf('Turbine successful\r');

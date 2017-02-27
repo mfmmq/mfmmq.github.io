@@ -4,7 +4,7 @@ function [ val ] = findProperty(Gas,T,Property)
 % values from the gas structure
 %
 % OUTPUTS
-% cp, specific heat at constant pressure in kJ/kmolK
+% cp, specific heat at constant pressure in kJ/kgK
 % Dh, change in enthalpy from h0 at 298K in kJ/kmol
 % s, change in entropy in kJ/kmolK
 %
