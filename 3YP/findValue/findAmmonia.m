@@ -1,15 +1,6 @@
+function [ammonia_flow] = findAmmonia(power)
 %function [ammonia_kmol] = RunModel(power_required,GasInfo)
 %RunModel.m
-
-% Find function for change in efficiency based on ammonia flow rate
-% Find out what's wrong with ammonia combustion temperature
-% Find a representation for NOx emissions
-
-
-
-
-% Range of flow allowed through the compressor/turbine is 
-
 
 
 % LOAD DATA
@@ -41,8 +32,6 @@ Data.NO = NO;
 Data.H2 = H2;
 %Data.Dissociation = Dissociation;
 
-
-
 % Physical constants
 % Define some physical constants which we have assumed to be constant.
 % These should be replaced later with more accurate representations that
@@ -52,16 +41,13 @@ Constant.gamma = 1.4;       % Specific heat ratio
 Constant.cp = 1.005;        % Specific heat at constant pressure, kJ/kgK
 
 % Define some parameters of the gas turbine powerplant in a structure
-Parameter.na = 1;           % 1kmol/s ammonia fuel flow
+Parameter.na = ammonia;     % 1kmol/s ammonia fuel flow
 
 % Define atmospheric conditions
 p_atm = 1.000;                   % Atmospheric pressure in bar
 t_atm = 293.13;                  % Atmospheric pressure in Kelvin
 
 
-
-ER_min = 0.765;
-ER_max = 1.0125;
 
 
 
@@ -86,7 +72,6 @@ State(2,1) = 2;
 
 
 
-
 % COMPRESSION (2-3)
 %--------------------------------------------------------------------------
 % Run the compressor
@@ -99,7 +84,6 @@ State = runCompressor(State,Parameter,Constant,Data);
 %--------------------------------------------------------------------------
 % Run the burner
 [State,Parameter] = runBurner(State,Parameter,Constant,Data);
-
 
 
 
@@ -137,7 +121,7 @@ runHeatExchanger(State,Parameter,Constant,Data);
 %runGenerator();
 w_t = State(4,5) - State(5,5);
 w_c = State(2,5) - State(3,5);
-w_out = w_t + w_c
+net_power_out = w_t + w_c;
 
 
-
+end

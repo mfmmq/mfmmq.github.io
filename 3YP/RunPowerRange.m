@@ -15,10 +15,14 @@
 %FuelOxidiserRatio = na/(n3*0.2);
 %ER = FuelOxidiserRatio/StochioRatio;
 
+addpath('findValue')
+addpath('runComponent')
+addpath('Data')
+n_air = 4;
 ER_min = 0.765;
 ER_max = 1.0125;
-ammonia_min = 4/3*4*0.2*ER_min;
-ammonia_max = 4/3*4*0.2*ER_max;
+ammonia_min = 4/3*n_air*0.2*ER_min;
+ammonia_max = 4/3*n_air*0.2*ER_max;
 ammonia = linspace(ammonia_min,ammonia_max,20);
 power_out = zeros(1,20);
 
@@ -27,5 +31,5 @@ for i = 1:20
 end
 
 plot(ammonia,power_out);
-xlabel('ammonia flow rate');
+xlabel('ammonia flow rate kmol');
 ylabel('power out kJ');

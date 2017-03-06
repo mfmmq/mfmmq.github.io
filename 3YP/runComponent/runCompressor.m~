@@ -6,8 +6,17 @@ function [State] = runCompressor(State,Parameter,Constant,Data)
 % COMPRESSOR MODEL DEFINITION
 %--------------------------------------------------------------------------
 Nu_c = 0.87;    % Isentropic efficiency
-CPR = 20;       % Pressure ratio
+CPR = 30;       % Pressure ratio
 
+% Define design values
+N = 3300*2*pi/60; % Rotational speed in rad/s, set at 3300 rev/min
+T01 = 273.13+25;    % Atmospheric temperature
+p01 = 1.013;     % 1.013 bar/atmospheric
+
+% Define design non-dimensional numbers
+% Non-dimensional speed number N/sqrt(T01)
+nds01 = N/sqrt(T01);
+% Non-dimensional mass flow
 
 
 % STATE CONDITIONS AND CONSTANTS
@@ -33,9 +42,6 @@ p3 = p2 * CPR; % New pressure defined by compressor pressure ratio
 % Calculate specific heat at constant pressure
 cp = 0.8*findProperty(Data.O2,t2,'cp')+0.2*findProperty(Data.N2,t2,'cp');
 
-% Calculate isenthalpic efficiency
-Nu_c = calculateCompressor(State,1);
-
 % Calculate total work done by compressor (defined by isentropic efficiency)
 % Find the resulting enthalpy at stage 4
 w23 = n3 * cp * t2 * (1-CPR^((gamma-1)/gamma))/Nu_c; % Work in (neg)
@@ -57,10 +63,9 @@ if abs(Margin) < abs(w23)*0.1
     fprintf('\tCalculated and tabulated enthalpy margin is %d kJ\r', Margin');
     fprintf('\tCompressor work done %d kJ\r\n',w23);
 else
-    fprintf('Compressor calculated and tabulated enthalpy at Stage3 ');
-    fprintf('inconsistent, margin %d\r\n',Margin);
+    fprintf('Compressor calculated and tabulated enthalpy at Stage3 inconsistent, margin %d\r\n',Margin);
 end
-
+    
 
 
 State(3,1) = 3;

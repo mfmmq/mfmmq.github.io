@@ -1,0 +1,356 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>RunModel</title><meta name="generator" content="MATLAB 9.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-02-28"><meta name="DC.source" content="RunModel.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="comment">%function [ammonia_kmol] = RunModel(power_required,GasInfo)</span>
+<span class="comment">%RunModel.m</span>
+
+<span class="comment">% Find function for change in efficiency based on ammonia flow rate</span>
+<span class="comment">% Find out what's wrong with ammonia combustion temperature</span>
+<span class="comment">% Find a representation for NOx emissions</span>
+
+
+
+
+<span class="comment">% Range of flow allowed through the compressor/turbine is</span>
+
+
+
+<span class="comment">% LOAD DATA</span>
+<span class="comment">%--------------------------------------------------------------------------</span>
+<span class="comment">% Initialise a matrix to carry state information</span>
+<span class="comment">% The matrix is structured with each row representing a different stage</span>
+<span class="comment">% [StageNumber FlowRate StagePressure StageTemp Enthalpy]</span>
+<span class="comment">% All pressures should be in bar, all temperature should be in K, specific</span>
+<span class="comment">% volume should be in m3/kg, enthalpy is kJ/kg, entropy is kJ/kgK</span>
+<span class="comment">% Missing values should be flagged with -999</span>
+State = zeros(5,6);
+
+<span class="comment">% Import gas table structures</span>
+load(<span class="string">'NH3.mat'</span>);
+load(<span class="string">'O2.mat'</span>);
+load(<span class="string">'N2.mat'</span>);
+load(<span class="string">'H2O.mat'</span>);
+load(<span class="string">'NO.mat'</span>);
+load(<span class="string">'H2.mat'</span>);
+
+<span class="comment">% Import dissociation/flame temp curve</span>
+<span class="comment">%load('Dissociation.mat');</span>
+
+Data.NH3 = NH3;
+Data.O2 = O2;
+Data.N2 = N2;
+Data.H2O = H2O;
+Data.NO = NO;
+Data.H2 = H2;
+<span class="comment">%Data.Dissociation = Dissociation;</span>
+
+<span class="comment">% Physical constants</span>
+<span class="comment">% Define some physical constants which we have assumed to be constant.</span>
+<span class="comment">% These should be replaced later with more accurate representations that</span>
+<span class="comment">% vary with temperature, etc</span>
+Constant = struct;          <span class="comment">% Define a structure for constants</span>
+Constant.gamma = 1.4;       <span class="comment">% Specific heat ratio</span>
+Constant.cp = 1.005;        <span class="comment">% Specific heat at constant pressure, kJ/kgK</span>
+
+<span class="comment">% Define some parameters of the gas turbine powerplant in a structure</span>
+Parameter.na = 1;           <span class="comment">% 1kmol/s ammonia fuel flow</span>
+
+<span class="comment">% Define atmospheric conditions</span>
+p_atm = 1.000;                   <span class="comment">% Atmospheric pressure in bar</span>
+t_atm = 293.13;                  <span class="comment">% Atmospheric pressure in Kelvin</span>
+
+
+
+ER_min = 0.765;
+ER_max = 1.0125;
+
+
+
+<span class="comment">% INITIAL CONDITIONS</span>
+<span class="comment">%--------------------------------------------------------------------------</span>
+<span class="comment">% Initialise stage 1 variables</span>
+n1 = 4; <span class="comment">% 1 kmol/s</span>
+p1 = p_atm;
+t1 = t_atm;
+v1 = 8315*t1*n1/p1/10^5; <span class="comment">%m3</span>
+h1 = n1*findProperty(Data.O2,t1,<span class="string">'Dh'</span>);
+
+<span class="comment">% Add to the State array</span>
+State(1,:) = [1 n1 p1 t1 h1 v1];
+
+
+
+<span class="comment">% INLET</span>
+<span class="comment">%--------------------------------------------------------------------------</span>
+State(2,:) = State(1,:);
+State(2,1) = 2;
+
+
+
+<span class="comment">% COMPRESSION (2-3)</span>
+<span class="comment">%--------------------------------------------------------------------------</span>
+<span class="comment">% Run the compressor</span>
+State = runCompressor(State,Parameter,Constant,Data);
+
+
+
+
+<span class="comment">% COMBUSTION (3-4)</span>
+<span class="comment">%--------------------------------------------------------------------------</span>
+<span class="comment">% Run the burner</span>
+[State,Parameter] = runBurner(State,Parameter,Constant,Data);
+
+
+
+
+<span class="comment">% EXPANSION (4-5)</span>
+<span class="comment">%--------------------------------------------------------------------------</span>
+<span class="comment">% Run the turbine</span>
+State = runTurbine(State,Parameter,Constant,Data);
+
+
+
+
+<span class="comment">% POST-PROCESSING</span>
+<span class="comment">%--------------------------------------------------------------------------</span>
+<span class="comment">% Something about checking NOx emissions and doing some cogen</span>
+<span class="comment">% Check NOx emissions</span>
+
+<span class="comment">% Run the heat exchanger to partially dissociate the ammonia</span>
+<span class="comment">% No state output - output probably not that important?</span>
+runHeatExchanger(State,Parameter,Constant,Data);
+
+
+
+
+<span class="comment">% POWER GENERATION</span>
+<span class="comment">%--------------------------------------------------------------------------</span>
+<span class="comment">% Run the generator</span>
+<span class="comment">%runGenerator();</span>
+
+
+
+<span class="comment">% RESULTS CALCULATIONS</span>
+<span class="comment">%--------------------------------------------------------------------------</span>
+<span class="comment">% Run the generator</span>
+<span class="comment">%runGenerator();</span>
+w_t = State(4,5) - State(5,5);
+w_c = State(2,5) - State(3,5);
+w_out = w_t + w_c
+</pre><pre class="codeoutput">Compressor successful	Calculated and tabulated enthalpy margin is -5.361650e+03 kJ	Compressor work done -6.488723e+04 kJ
+Burner successful	T4 temperature 2.006921e+03 K	Equivalence ratio 0.9
+Turbine successful	Calculated and tabulated enthalpy margin is -1.035590e+04 kJ	Turbine work done 1.885795e+05
+Heat exchanger converges	Temperature difference at burner inlet 443 K
+w_out =
+
+   1.2369e+05
+
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%function [ammonia_kmol] = RunModel(power_required,GasInfo)
+%RunModel.m
+
+% Find function for change in efficiency based on ammonia flow rate
+% Find out what's wrong with ammonia combustion temperature
+% Find a representation for NOx emissions
+
+
+
+
+% Range of flow allowed through the compressor/turbine is 
+
+
+
+% LOAD DATA
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% Initialise a matrix to carry state information
+% The matrix is structured with each row representing a different stage
+% [StageNumber FlowRate StagePressure StageTemp Enthalpy]
+% All pressures should be in bar, all temperature should be in K, specific
+% volume should be in m3/kg, enthalpy is kJ/kg, entropy is kJ/kgK
+% Missing values should be flagged with -999
+State = zeros(5,6);
+
+% Import gas table structures
+load('NH3.mat');
+load('O2.mat');
+load('N2.mat');
+load('H2O.mat');
+load('NO.mat');
+load('H2.mat');
+
+% Import dissociation/flame temp curve
+%load('Dissociation.mat');
+
+Data.NH3 = NH3;
+Data.O2 = O2;
+Data.N2 = N2;
+Data.H2O = H2O;
+Data.NO = NO;
+Data.H2 = H2;
+%Data.Dissociation = Dissociation;
+
+% Physical constants
+% Define some physical constants which we have assumed to be constant.
+% These should be replaced later with more accurate representations that
+% vary with temperature, etc
+Constant = struct;          % Define a structure for constants
+Constant.gamma = 1.4;       % Specific heat ratio
+Constant.cp = 1.005;        % Specific heat at constant pressure, kJ/kgK
+
+% Define some parameters of the gas turbine powerplant in a structure
+Parameter.na = 1;           % 1kmol/s ammonia fuel flow
+
+% Define atmospheric conditions
+p_atm = 1.000;                   % Atmospheric pressure in bar
+t_atm = 293.13;                  % Atmospheric pressure in Kelvin
+
+
+
+ER_min = 0.765;
+ER_max = 1.0125;
+
+
+
+% INITIAL CONDITIONS
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% Initialise stage 1 variables
+n1 = 4; % 1 kmol/s
+p1 = p_atm;
+t1 = t_atm;
+v1 = 8315*t1*n1/p1/10^5; %m3
+h1 = n1*findProperty(Data.O2,t1,'Dh');
+
+% Add to the State array
+State(1,:) = [1 n1 p1 t1 h1 v1];
+
+
+
+% INLET
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+State(2,:) = State(1,:);
+State(2,1) = 2;
+
+
+
+% COMPRESSION (2-3)
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% Run the compressor
+State = runCompressor(State,Parameter,Constant,Data);
+
+
+
+
+% COMBUSTION (3-4)
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% Run the burner
+[State,Parameter] = runBurner(State,Parameter,Constant,Data);
+
+
+
+
+% EXPANSION (4-5)
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% Run the turbine
+State = runTurbine(State,Parameter,Constant,Data);
+
+
+
+
+% POST-PROCESSING
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% Something about checking NOx emissions and doing some cogen
+% Check NOx emissions
+
+% Run the heat exchanger to partially dissociate the ammonia
+% No state output - output probably not that important?
+runHeatExchanger(State,Parameter,Constant,Data);
+
+
+
+
+% POWER GENERATION 
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% Run the generator
+%runGenerator();
+
+
+
+% RESULTS CALCULATIONS 
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% Run the generator
+%runGenerator();
+w_t = State(4,5) - State(5,5);
+w_c = State(2,5) - State(3,5);
+w_out = w_t + w_c
+
+
+
+
+##### SOURCE END #####
+--></body></html>

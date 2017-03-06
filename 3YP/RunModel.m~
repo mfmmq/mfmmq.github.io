@@ -42,6 +42,16 @@ Data.H2 = H2;
 %Data.Dissociation = Dissociation;
 
 
+% Load component data
+load('Compressor.mat');
+Data.Compressor = Compressor;
+
+% Polyfit component data and rewrite compressor
+[s,~] = size(Compressor.speed);
+for i = 1:s
+    
+    
+end
 
 % Physical constants
 % Define some physical constants which we have assumed to be constant.
@@ -86,7 +96,6 @@ State(2,1) = 2;
 
 
 
-
 % COMPRESSION (2-3)
 %--------------------------------------------------------------------------
 % Run the compressor
@@ -99,7 +108,6 @@ State = runCompressor(State,Parameter,Constant,Data);
 %--------------------------------------------------------------------------
 % Run the burner
 [State,Parameter] = runBurner(State,Parameter,Constant,Data);
-
 
 
 

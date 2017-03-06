@@ -1,0 +1,202 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>RunPowerRange</title><meta name="generator" content="MATLAB 9.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-02-28"><meta name="DC.source" content="RunPowerRange.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="comment">%RunPowerRange.m</span>
+
+<span class="comment">% Equivalence ratio is the fuel:air/stochiometric fuel:air ratio</span>
+<span class="comment">% This should fall between 0.765 and 1.1 (from experimental data)</span>
+<span class="comment">% Ammonia is flow rate of ammonia in kmol/s</span>
+
+<span class="comment">% Design point will probably be Eq. Ratio = 0.9 ie inlet air flow of 4kmol</span>
+<span class="comment">% (currently the designed inlet flow)</span>
+<span class="comment">% and ammonia_n = 1 kmol/s</span>
+
+<span class="comment">% I have yet to decide this because I'm not sure what the average flow rate</span>
+<span class="comment">% will be/average power requirement</span>
+
+<span class="comment">%StochioRatio = 4/3;</span>
+<span class="comment">%FuelOxidiserRatio = na/(n3*0.2);</span>
+<span class="comment">%ER = FuelOxidiserRatio/StochioRatio;</span>
+
+addpath(<span class="string">'findValue'</span>)
+addpath(<span class="string">'runComponent'</span>)
+addpath(<span class="string">'Data'</span>)
+
+ER_min = 0.765;
+ER_max = 1.0125;
+ammonia_min = 4/3*4*0.2*ER_min;
+ammonia_max = 4/3*4*0.2*ER_max;
+ammonia = linspace(ammonia_min,ammonia_max,20);
+power_out = zeros(1,20);
+
+<span class="keyword">for</span> i = 1:20
+    power_out(i) = findPower(ammonia(i));
+<span class="keyword">end</span>
+
+plot(ammonia,power_out);
+xlabel(<span class="string">'ammonia flow rate'</span>);
+ylabel(<span class="string">'power out kJ'</span>);
+</pre><pre class="codeoutput">Compressor successful	Calculated and tabulated enthalpy margin is -5.361650e+03 kJ	Compressor work done -6.488723e+04 kJ
+Warning, ER is out of interpolation rangesBurner successful	T4 temperature 1.882773e+03 K	Equivalence ratio 0.8
+Turbine successful	Calculated and tabulated enthalpy margin is -9.788956e+03 kJ	Turbine work done 1.681679e+05
+Heat exchanger converges	Temperature difference at burner inlet 388 KCompressor successful	Calculated and tabulated enthalpy margin is -5.361650e+03 kJ	Compressor work done -6.488723e+04 kJ
+Burner successful	T4 temperature 1.897957e+03 K	Equivalence ratio 0.8
+Turbine successful	Calculated and tabulated enthalpy margin is -9.847601e+03 kJ	Turbine work done 1.702651e+05
+Heat exchanger converges	Temperature difference at burner inlet 395 KCompressor successful	Calculated and tabulated enthalpy margin is -5.361650e+03 kJ	Compressor work done -6.488723e+04 kJ
+Burner successful	T4 temperature 1.912191e+03 K	Equivalence ratio 0.8
+Turbine successful	Calculated and tabulated enthalpy margin is -9.903617e+03 kJ	Turbine work done 1.722754e+05
+Heat exchanger converges	Temperature difference at burner inlet 401 KCompressor successful	Calculated and tabulated enthalpy margin is -5.361650e+03 kJ	Compressor work done -6.488723e+04 kJ
+Burner successful	T4 temperature 1.925477e+03 K	Equivalence ratio 0.8
+Turbine successful	Calculated and tabulated enthalpy margin is -9.957194e+03 kJ	Turbine work done 1.741980e+05
+Heat exchanger converges	Temperature difference at burner inlet 407 KCompressor successful	Calculated and tabulated enthalpy margin is -5.361650e+03 kJ	Compressor work done -6.488723e+04 kJ
+Burner successful	T4 temperature 1.937814e+03 K	Equivalence ratio 0.8
+Turbine successful	Calculated and tabulated enthalpy margin is -1.000848e+04 kJ	Turbine work done 1.760319e+05
+Heat exchanger converges	Temperature difference at burner inlet 413 KCompressor successful	Calculated and tabulated enthalpy margin is -5.361650e+03 kJ	Compressor work done -6.488723e+04 kJ
+Burner successful	T4 temperature 1.949202e+03 K	Equivalence ratio 0.8
+Turbine successful	Calculated and tabulated enthalpy margin is -1.005757e+04 kJ	Turbine work done 1.777761e+05
+Heat exchanger converges	Temperature difference at burner inlet 418 KCompressor successful	Calculated and tabulated enthalpy margin is -5.361650e+03 kJ	Compressor work done -6.488723e+04 kJ
+Burner successful	T4 temperature 1.959641e+03 K	Equivalence ratio 0.8
+Turbine successful	Calculated and tabulated enthalpy margin is -1.010456e+04 kJ	Turbine work done 1.794296e+05
+Heat exchanger converges	Temperature difference at burner inlet 422 KCompressor successful	Calculated and tabulated enthalpy margin is -5.361650e+03 kJ	Compressor work done -6.488723e+04 kJ
+Burner successful	T4 temperature 1.969131e+03 K	Equivalence ratio 0.9
+Turbine successful	Calculated and tabulated enthalpy margin is -1.014947e+04 kJ	Turbine work done 1.809915e+05
+Heat exchanger converges	Temperature difference at burner inlet 426 KCompressor successful	Calculated and tabulated enthalpy margin is -5.361650e+03 kJ	Compressor work done -6.488723e+04 kJ
+Burner successful	T4 temperature 1.977673e+03 K	Equivalence ratio 0.9
+Turbine successful	Calculated and tabulated enthalpy margin is -1.019234e+04 kJ	Turbine work done 1.824607e+05
+Heat exchanger converges	Temperature difference at burner inlet 430 KCompressor successful	Calculated and tabulated enthalpy margin is -5.361650e+03 kJ	Compressor work done -6.488723e+04 kJ
+Burner successful	T4 temperature 1.985265e+03 K	Equivalence ratio 0.9
+Turbine successful	Calculated and tabulated enthalpy margin is -1.023315e+04 kJ	Turbine work done 1.838362e+05
+Heat exchanger converges	Temperature difference at burner inlet 434 KCompressor successful	Calculated and tabulated enthalpy margin is -5.361650e+03 kJ	Compressor work done -6.488723e+04 kJ
+Burner successful	T4 temperature 1.991908e+03 K	Equivalence ratio 0.9
+Turbine successful	Calculated and tabulated enthalpy margin is -1.027190e+04 kJ	Turbine work done 1.851170e+05
+Heat exchanger converges	Temperature difference at burner inlet 437 KCompressor successful	Calculated and tabulated enthalpy margin is -5.361650e+03 kJ	Compressor work done -6.488723e+04 kJ
+Burner successful	T4 temperature 1.997602e+03 K	Equivalence ratio 0.9
+Turbine successful	Calculated and tabulated enthalpy margin is -1.030855e+04 kJ	Turbine work done 1.863021e+05
+Heat exchanger converges	Temperature difference at burner inlet 439 KCompressor successful	Calculated and tabulated enthalpy margin is -5.361650e+03 kJ	Compressor work done -6.488723e+04 kJ
+Burner successful	T4 temperature 2.002348e+03 K	Equivalence ratio 0.9
+Turbine successful	Calculated and tabulated enthalpy margin is -1.031860e+04 kJ	Turbine work done 1.873662e+05
+Heat exchanger converges	Temperature difference at burner inlet 441 KCompressor successful	Calculated and tabulated enthalpy margin is -5.361650e+03 kJ	Compressor work done -6.488723e+04 kJ
+Burner successful	T4 temperature 2.006144e+03 K	Equivalence ratio 0.9
+Turbine successful	Calculated and tabulated enthalpy margin is -1.034884e+04 kJ	Turbine work done 1.883547e+05
+Heat exchanger converges	Temperature difference at burner inlet 443 KCompressor successful	Calculated and tabulated enthalpy margin is -5.361650e+03 kJ	Compressor work done -6.488723e+04 kJ
+Burner successful	T4 temperature 2.008991e+03 K	Equivalence ratio 0.9
+Turbine successful	Calculated and tabulated enthalpy margin is -1.037730e+04 kJ	Turbine work done 1.892448e+05
+Heat exchanger converges	Temperature difference at burner inlet 444 KCompressor successful	Calculated and tabulated enthalpy margin is -5.361650e+03 kJ	Compressor work done -6.488723e+04 kJ
+Burner successful	T4 temperature 2.010890e+03 K	Equivalence ratio 1.0
+Turbine successful	Calculated and tabulated enthalpy margin is -1.040398e+04 kJ	Turbine work done 1.900358e+05
+Heat exchanger converges	Temperature difference at burner inlet 445 KCompressor successful	Calculated and tabulated enthalpy margin is -5.361650e+03 kJ	Compressor work done -6.488723e+04 kJ
+Burner successful	T4 temperature 2.011839e+03 K	Equivalence ratio 1.0
+Turbine successful	Calculated and tabulated enthalpy margin is -1.042887e+04 kJ	Turbine work done 1.907267e+05
+Heat exchanger converges	Temperature difference at burner inlet 445 KCompressor successful	Calculated and tabulated enthalpy margin is -5.361650e+03 kJ	Compressor work done -6.488723e+04 kJ
+Burner successful	T4 temperature 2.011840e+03 K	Equivalence ratio 1.0
+Turbine successful	Calculated and tabulated enthalpy margin is -1.045197e+04 kJ	Turbine work done 1.913165e+05
+Heat exchanger converges	Temperature difference at burner inlet 445 KCompressor successful	Calculated and tabulated enthalpy margin is -5.361650e+03 kJ	Compressor work done -6.488723e+04 kJ
+Burner successful	T4 temperature 2.010892e+03 K	Equivalence ratio 1.0
+Turbine successful	Calculated and tabulated enthalpy margin is -1.047323e+04 kJ	Turbine work done 1.918043e+05
+Heat exchanger converges	Temperature difference at burner inlet 445 KCompressor successful	Calculated and tabulated enthalpy margin is -5.361650e+03 kJ	Compressor work done -6.488723e+04 kJ
+Burner successful	T4 temperature 2.008994e+03 K	Equivalence ratio 1.0
+Turbine successful	Calculated and tabulated enthalpy margin is -1.049261e+04 kJ	Turbine work done 1.921893e+05
+Heat exchanger converges	Temperature difference at burner inlet 444 K</pre><img vspace="5" hspace="5" src="RunPowerRange_01.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%RunPowerRange.m
+
+% Equivalence ratio is the fuel:air/stochiometric fuel:air ratio
+% This should fall between 0.765 and 1.1 (from experimental data)
+% Ammonia is flow rate of ammonia in kmol/s
+
+% Design point will probably be Eq. Ratio = 0.9 ie inlet air flow of 4kmol
+% (currently the designed inlet flow)
+% and ammonia_n = 1 kmol/s
+
+% I have yet to decide this because I'm not sure what the average flow rate
+% will be/average power requirement
+
+%StochioRatio = 4/3;
+%FuelOxidiserRatio = na/(n3*0.2);
+%ER = FuelOxidiserRatio/StochioRatio;
+
+addpath('findValue')
+addpath('runComponent')
+addpath('Data')
+
+ER_min = 0.765;
+ER_max = 1.0125;
+ammonia_min = 4/3*4*0.2*ER_min;
+ammonia_max = 4/3*4*0.2*ER_max;
+ammonia = linspace(ammonia_min,ammonia_max,20);
+power_out = zeros(1,20);
+
+for i = 1:20
+    power_out(i) = findPower(ammonia(i));
+end
+
+plot(ammonia,power_out);
+xlabel('ammonia flow rate');
+ylabel('power out kJ');
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,216 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>runCompressor</title><meta name="generator" content="MATLAB 9.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-02-28"><meta name="DC.source" content="runCompressor.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="keyword">function</span> [State] = runCompressor(State,Parameter,Constant,Data)
+<span class="comment">%runCompressor</span>
+
+
+
+<span class="comment">% COMPRESSOR MODEL DEFINITION</span>
+<span class="comment">%--------------------------------------------------------------------------</span>
+Nu_c = 0.87;    <span class="comment">% Isentropic efficiency</span>
+CPR = 30;       <span class="comment">% Pressure ratio</span>
+
+
+<span class="comment">% STATE CONDITIONS AND CONSTANTS</span>
+<span class="comment">%--------------------------------------------------------------------------</span>
+<span class="comment">% Pass variables from input State structure</span>
+n2 = State(2,2); <span class="comment">% Flow rate in kmol/s</span>
+p2 = State(2,3);
+t2 = State(2,4);
+h2 = State(2,5);
+v2 = State(2,6);
+
+gamma = Constant.gamma;
+
+
+
+
+<span class="comment">% COMPRESSOR CALCULATIONS</span>
+<span class="comment">%--------------------------------------------------------------------------</span>
+n3 = n2;       <span class="comment">% No change in flow rate</span>
+p3 = p2 * CPR; <span class="comment">% New pressure defined by compressor pressure ratio</span>
+
+
+<span class="comment">% Calculate specific heat at constant pressure</span>
+cp = 0.8*findProperty(Data.O2,t2,<span class="string">'cp'</span>)+0.2*findProperty(Data.N2,t2,<span class="string">'cp'</span>);
+
+<span class="comment">% Calculate total work done by compressor (defined by isentropic efficiency)</span>
+<span class="comment">% Find the resulting enthalpy at stage 4</span>
+w23 = n3 * cp * t2 * (1-CPR^((gamma-1)/gamma))/Nu_c; <span class="comment">% Work in (neg)</span>
+h3 = h2 - w23;
+
+<span class="comment">% Calculate new temperature by using work done equals change in enthalpy</span>
+t3 = t2 - w23/cp/n3;
+
+
+
+
+<span class="comment">% CHECKS</span>
+<span class="comment">%--------------------------------------------------------------------------</span>
+<span class="comment">% Use findProperties to see if enthalpy is reasonable</span>
+h3_meas = n3*findProperty(Data.O2,t3,<span class="string">'Dh'</span>);
+Margin = h3-h3_meas;
+<span class="keyword">if</span> abs(Margin) &lt; abs(w23)*0.1
+    fprintf(<span class="string">'Compressor successful\r'</span>);
+    fprintf(<span class="string">'\tCalculated and tabulated enthalpy margin is %d kJ\r'</span>, Margin');
+    fprintf(<span class="string">'\tCompressor work done %d kJ\r\n'</span>,w23);
+<span class="keyword">else</span>
+    fprintf(<span class="string">'Compressor calculated and tabulated enthalpy at Stage3 inconsistent, margin %d\r\n'</span>,Margin);
+<span class="keyword">end</span>
+
+
+
+State(3,1) = 3;
+State(3,2) = n3;
+State(3,3) = p3;
+State(3,4) = t3;
+State(3,5) = h3;
+State(3,6) = 8315*t3*n3/p3/10^5;
+
+<span class="keyword">end</span>
+</pre><pre class="codeoutput error">Not enough input arguments.
+
+Error in runCompressor (line 15)
+n2 = State(2,2); % Flow rate in kmol/s
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+function [State] = runCompressor(State,Parameter,Constant,Data)
+%runCompressor
+
+
+
+% COMPRESSOR MODEL DEFINITION
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+Nu_c = 0.87;    % Isentropic efficiency
+CPR = 30;       % Pressure ratio
+
+
+% STATE CONDITIONS AND CONSTANTS
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% Pass variables from input State structure
+n2 = State(2,2); % Flow rate in kmol/s
+p2 = State(2,3);
+t2 = State(2,4);
+h2 = State(2,5);
+v2 = State(2,6);
+
+gamma = Constant.gamma;
+
+
+
+
+% COMPRESSOR CALCULATIONS
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+n3 = n2;       % No change in flow rate
+p3 = p2 * CPR; % New pressure defined by compressor pressure ratio
+
+
+% Calculate specific heat at constant pressure
+cp = 0.8*findProperty(Data.O2,t2,'cp')+0.2*findProperty(Data.N2,t2,'cp');
+
+% Calculate total work done by compressor (defined by isentropic efficiency)
+% Find the resulting enthalpy at stage 4
+w23 = n3 * cp * t2 * (1-CPR^((gamma-1)/gamma))/Nu_c; % Work in (neg)
+h3 = h2 - w23;
+
+% Calculate new temperature by using work done equals change in enthalpy
+t3 = t2 - w23/cp/n3;
+
+
+
+
+% CHECKS
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% Use findProperties to see if enthalpy is reasonable
+h3_meas = n3*findProperty(Data.O2,t3,'Dh');
+Margin = h3-h3_meas;
+if abs(Margin) < abs(w23)*0.1
+    fprintf('Compressor successful\r');
+    fprintf('\tCalculated and tabulated enthalpy margin is %d kJ\r', Margin');
+    fprintf('\tCompressor work done %d kJ\r\n',w23);
+else
+    fprintf('Compressor calculated and tabulated enthalpy at Stage3 inconsistent, margin %d\r\n',Margin);
+end
+    
+
+
+State(3,1) = 3;
+State(3,2) = n3;
+State(3,3) = p3;
+State(3,4) = t3;
+State(3,5) = h3;
+State(3,6) = 8315*t3*n3/p3/10^5;
+
+end
+
+
+
+
+##### SOURCE END #####
+--></body></html>

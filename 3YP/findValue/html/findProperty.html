@@ -1,0 +1,200 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>findProperty</title><meta name="generator" content="MATLAB 9.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-02-28"><meta name="DC.source" content="findProperty.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="keyword">function</span> [ val ] = findProperty(Gas,T,Property)
+<span class="comment">%findProperty</span>
+<span class="comment">% Function takes gas structure, property name, and temperature and returns</span>
+<span class="comment">% values from the gas structure</span>
+<span class="comment">%</span>
+<span class="comment">% OUTPUTS</span>
+<span class="comment">% cp, specific heat at constant pressure in kJ/kmolK</span>
+<span class="comment">% Dh, change in enthalpy from h0 at 298K in kJ/kmol</span>
+<span class="comment">% s, change in entropy in kJ/kmolK</span>
+<span class="comment">%</span>
+<span class="comment">% Gas is a structure with fields shomate, shomate_temp. shomate_temp is in</span>
+<span class="comment">% Kelvin, shomate is shomate constants</span>
+<span class="comment">% T should be input in Kelvin</span>
+<span class="comment">% Property should be either cp, Dh, or s</span>
+
+
+<span class="comment">% Check if structure is correct</span>
+
+<span class="comment">% Check if temperature is within range</span>
+<span class="keyword">if</span> T &lt;= 0
+    error(<span class="string">'T is negative number %d, must be Kelvin'</span>, T);
+<span class="keyword">end</span>
+[~,s] = size(Gas.shomate_temp);
+<span class="keyword">if</span> (Gas.shomate_temp(1,1) &gt; T) || (Gas.shomate_temp(2,s) &lt; T)
+    error(<span class="string">'Gas temperature %f is out of shomate range'</span>,T);
+<span class="keyword">end</span>
+
+<span class="comment">% Find temperature range</span>
+i = 1;
+<span class="keyword">while</span> T &gt; Gas.shomate_temp(2,i)
+    i = i+1;
+<span class="keyword">end</span>
+
+<span class="comment">% Pass shomate constants</span>
+A = Gas.shomate(1,i);
+B = Gas.shomate(2,i);
+C = Gas.shomate(3,i);
+D = Gas.shomate(4,i);
+E = Gas.shomate(5,i);
+F = Gas.shomate(6,i);
+G = Gas.shomate(7,i);
+H = Gas.shomate(8,i);
+
+t = T/1000;
+h0 = Gas.h0; <span class="comment">% enthalpy at 298K</span>
+
+<span class="comment">% Get property from shomate equation</span>
+<span class="keyword">if</span> strcmp(Property,<span class="string">'cp'</span>)
+    val =( A + B*t + C*t^2 + D*t^3 + E/t^2 );
+<span class="keyword">elseif</span> strcmp(Property,<span class="string">'Dh'</span>)
+    val = ((A*t + B*t^2/2 + C*t^3/3 + D*t^4/4 - E/t + F - H )*1000+h0);
+<span class="keyword">elseif</span> strcmp(Property, <span class="string">'s'</span>)
+    val = A*ln(t) + B*t + C*t^2/2 + D*t^3/3 - E/(2*t^2) + G;
+<span class="keyword">else</span>
+    error(<span class="string">'%s property not found in gas structure'</span>, Property);
+<span class="keyword">end</span>
+
+
+
+<span class="keyword">end</span>
+</pre><pre class="codeoutput error">Not enough input arguments.
+
+Error in findProperty (line 20)
+if T &lt;= 0
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+function [ val ] = findProperty(Gas,T,Property)
+%findProperty
+% Function takes gas structure, property name, and temperature and returns
+% values from the gas structure
+%
+% OUTPUTS
+% cp, specific heat at constant pressure in kJ/kmolK
+% Dh, change in enthalpy from h0 at 298K in kJ/kmol
+% s, change in entropy in kJ/kmolK
+%
+% Gas is a structure with fields shomate, shomate_temp. shomate_temp is in
+% Kelvin, shomate is shomate constants
+% T should be input in Kelvin
+% Property should be either cp, Dh, or s
+
+
+% Check if structure is correct
+
+% Check if temperature is within range
+if T <= 0
+    error('T is negative number %d, must be Kelvin', T);
+end
+[~,s] = size(Gas.shomate_temp);
+if (Gas.shomate_temp(1,1) > T) || (Gas.shomate_temp(2,s) < T)
+    error('Gas temperature %f is out of shomate range',T);
+end
+
+% Find temperature range
+i = 1;
+while T > Gas.shomate_temp(2,i)
+    i = i+1;
+end
+
+% Pass shomate constants
+A = Gas.shomate(1,i);
+B = Gas.shomate(2,i);
+C = Gas.shomate(3,i);
+D = Gas.shomate(4,i);
+E = Gas.shomate(5,i);
+F = Gas.shomate(6,i);
+G = Gas.shomate(7,i);
+H = Gas.shomate(8,i);
+
+t = T/1000;
+h0 = Gas.h0; % enthalpy at 298K
+
+% Get property from shomate equation
+if strcmp(Property,'cp')
+    val =( A + B*t + C*t^2 + D*t^3 + E/t^2 );
+elseif strcmp(Property,'Dh')
+    val = ((A*t + B*t^2/2 + C*t^3/3 + D*t^4/4 - E/t + F - H )*1000+h0);
+elseif strcmp(Property, 's')
+    val = A*ln(t) + B*t + C*t^2/2 + D*t^3/3 - E/(2*t^2) + G;
+else 
+    error('%s property not found in gas structure', Property);
+end
+
+
+
+end
+
+
+
+
+##### SOURCE END #####
+--></body></html>
