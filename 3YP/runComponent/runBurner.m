@@ -104,6 +104,50 @@ State(4,5) = h4;
 State(4,6) = 8315*t4*n4/p4/10^5; % Approximate as ideal
 
 
+
+% PLOT CHARACTERISTIC 
+%--------------------------------------------------------------------------
+% Plot burner flame temperature versus equivalence ratio
+
+% If figure doesn't exist yet, create characteristic curves
+if ishandle(2) == 0  
+    
+    % Plot warning line first (limits of operation) in a lighter color
+    % Then plot standard operation line
+    % Warning line 0.5 < ER < 1.2
+    % Nominal operational range given by 0.765 < ER < 1.0125   
+    figure(2);
+    
+    % Warning line graph
+    x = linspace(0.5,1.2,(1.2-.5)*30);
+    t = polyval(p,x) + 273;
+    plot(x,t,'color', [0.8 0.8 0.8],'LineWidth',2)
+    hold on;
+    
+    % Operational line graph
+    x = linspace(0.6,1.0125,(1.0125-.765)*30);
+    t = polyval(p,x) + 273;
+    plot(x,t,'k','LineWidth',2)
+    
+    
+    % Label and edit the graph
+    grid on;
+    xlim([0.4 1.3]);
+    xlabel('Fuel:Air Equivalence Ratio');
+    ylim([1000 2400]);
+    ylabel('T4 Temperature (K)');
+    title('Burner Flame Temperature');
+    
+end
+
+% Make sure this is the right figure
+figure(2);
+% Add performance point onto the graph
+hold on;
+plot(ER,t4,'rx','MarkerSize',15);
+
+
+
 end
 
 %{

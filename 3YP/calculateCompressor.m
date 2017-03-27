@@ -1,5 +1,5 @@
 function [Nu_c,N2] = calculateCompressor(State,Plot)
-%calculateCompressor
+%calculateTurbine
 % function calculates compressor characteristics given a certain rotational
 % speed, mole flow rate
 % It assumes a design value according to atmospheric conditions and a
@@ -14,7 +14,9 @@ function [Nu_c,N2] = calculateCompressor(State,Plot)
 N_d = 3300*2*pi/60; % Rotational speed in rad/s, set at 3300 rev/min
 t_d = 273.13+25;    % Atmospheric temperature
 p_d = 1.013;        % 1.013 bar/atmospheric
-n_d = 4;            % 4kmol/s
+% 4 kmol/s should fall at 0.55 for molar flow number
+% High isentropic efficiency while allowing for an increase in flow
+n_d = 85;            % 10kmol/s
 
 
 
@@ -74,7 +76,7 @@ N_ratio = -1;
 for i=1:s
     % Find which values the speed number is within
     % Round up values with 0.7
-    if n_ratio >= 0.7*Compressor.speed(i) && n_ratio<=1.2*Compressor.speed(i)
+    if n_ratio >= Compressor.molar(i,1) && n_ratio<=Compressor.molar(i,3)
         N_ratio = Compressor.speed(i);
         break;
     end
@@ -108,33 +110,42 @@ Nu_c = polyval(p,n_ratio);
 % Polyfit component data and rewrite compressor
 if Plot == 1
     
-    % Calculate polyfit
-    Compressor.polyfit = zeros(s,3);
-    for i = 1:s
-        x = Compressor.molar(i,:);
-        y = Compressor.efficiency(i,:);
-        p = polyfit(x,y,2);
-        Compressor.polyfit(i,:) = p;
+    % If figure doesn't exist yet, create characteristic curves
+    if ishandle(1) == 0
+        figure(1)
+        % Calculate polyfit
+        Compressor.polyfit = zeros(s,3);
+        for i = 1:s
+            x = Compressor.molar(i,:);
+            y = Compressor.efficiency(i,:);
+            p = polyfit(x,y,2);
+            Compressor.polyfit(i,:) = p;
+        end
+
+        % Create graph
+        figure(1);
+        for i = 1:s
+            x = linspace(Compressor.molar(i,1),Compressor.molar(i,3),20);
+            y = polyval(Compressor.polyfit(i,:),x);
+            plot(x,y, ...
+                'LineWidth',2);
+            hold on;
+        end
+
+        % Label and edit the graph 
+        grid on;
+        xlim([0 1.2]);
+        xlabel('Mole number (n*sqrt(t)/p) ratio');
+        ylim([0 1]);
+        ylabel('Isentropic efficiency');
+        title('Compressor Characteristic Efficiency');
     end
     
-    % Create graph
-    f = figure(1)
-    for i = 1:s
-        x = linspace(Compressor.molar(i,1),Compressor.molar(i,3),20);
-        y = polyval(Compressor.polyfit(i,:),x);
-        plot(x,y);
-        hold on;
-    end
-    
-    % Label the graph
-    grid on;
-    xlim([0 1.2]);
-    xlabel('Mole number, n*sqrt(t)/p');
-    ylim([0 1]);
-    ylabel('Isentropic efficiency');
-    title('Compressor Characteristic Efficiency');
-    
+    % Make sure this is the right figure
+    figure(1);
     % Add performance point onto the graph
+    hold on;
+    plot(n_ratio,Nu_c,'rx','MarkerSize',17);
     
 end
 

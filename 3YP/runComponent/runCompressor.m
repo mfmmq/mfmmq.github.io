@@ -34,7 +34,10 @@ p3 = p2 * CPR; % New pressure defined by compressor pressure ratio
 cp = 0.8*findProperty(Data.O2,t2,'cp')+0.2*findProperty(Data.N2,t2,'cp');
 
 % Calculate isenthalpic efficiency
-Nu_c = calculateCompressor(State,1);
+[Nu_c,N] = calculateCompressor(State,1);
+% Save rotational speed in parameter
+Parameter.N = N;
+
 
 % Calculate total work done by compressor (defined by isentropic efficiency)
 % Find the resulting enthalpy at stage 4
@@ -54,6 +57,8 @@ h3_meas = n3*findProperty(Data.O2,t3,'Dh');
 Margin = h3-h3_meas;
 if abs(Margin) < abs(w23)*0.1
     fprintf('Compressor successful\r');
+    fprintf('\tIsentropic efficiency is %.4f\r',Nu_c);
+    fprintf('\tShaft rotational speed is %i rad/s\r',N);
     fprintf('\tCalculated and tabulated enthalpy margin is %d kJ\r', Margin');
     fprintf('\tCompressor work done %d kJ\r\n',w23);
 else

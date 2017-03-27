@@ -18,18 +18,51 @@
 addpath('findValue')
 addpath('runComponent')
 addpath('Data')
-n_air = 4;
-ER_min = 0.765;
-ER_max = 1.0125;
-ammonia_min = 4/3*n_air*0.2*ER_min;
-ammonia_max = 4/3*n_air*0.2*ER_max;
-ammonia = linspace(ammonia_min,ammonia_max,20);
-power_out = zeros(1,20);
 
+
+% Close all figures
+close all;
+
+
+
+
+% First calculate the values for steady state air flow
+n_air = 10;
+ER_min = 0.65;
+ER_max = 1.0125;
+ER_range = linspace(ER_min,ER_max,20);
+power_out = zeros(20,20);
+ammonia = ER_range.*4./3.*n_air.*0.2;
 for i = 1:20
-    power_out(i) = findPower(ammonia(i));
+    power_out(i) = findPower(n_air,ammonia(i));
 end
 
+ammonia_range = ER_range.*4./3.*n_air.*0.2;
+for i = 1:20
+    % Fix air flow rate and test different ammonia values within allowed
+    % equivalence ratio ranges
+    n_air_min = ammonia_range(i)/ER_max/4*3/0.2;
+    n_air_max = ammonia_range(i)/ER_min/4*3/0.2;
+    n_air_range = linspace(n_air_min,n_air_max,20);
+    for j = 1:20
+        power_out(i,j) = findPower(n_air_range(j),ammonia_range(i));
+    end
+end
+
+
+figure(4);
 plot(ammonia,power_out);
-xlabel('ammonia flow rate kmol');
-ylabel('power out kJ');
+xlabel('Equivalence ratio');
+ylabel('power out kW');
+grid on;
+title('Ammonia input versus power out for constant inlet flow of 10kmol');
+
+
+
+
+
+
+
+
+
+

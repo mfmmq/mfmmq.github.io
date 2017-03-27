@@ -48,7 +48,7 @@ h0 = Gas.h0; % enthalpy at 298K
 if strcmp(Property,'cp')
     val =( A + B*t + C*t^2 + D*t^3 + E/t^2 );
 elseif strcmp(Property,'Dh')
-    val = ((A*t + B*t^2/2 + C*t^3/3 + D*t^4/4 - E/t + F - H )*1000+h0);
+    val = ((A*t + B*t^2/2 + C*t^3/3 + D*t^4/4 - E/t + F - H )*1000);%+h0);
 elseif strcmp(Property, 's')
     val = A*ln(t) + B*t + C*t^2/2 + D*t^3/3 - E/(2*t^2) + G;
 else 

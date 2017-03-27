@@ -11,6 +11,8 @@
 % Range of flow allowed through the compressor/turbine is 
 
 
+% Close all figures
+close all;
 
 % LOAD DATA
 %--------------------------------------------------------------------------
@@ -51,14 +53,11 @@ Constant = struct;          % Define a structure for constants
 Constant.gamma = 1.4;       % Specific heat ratio
 Constant.cp = 1.005;        % Specific heat at constant pressure, kJ/kgK
 
-% Define some parameters of the gas turbine powerplant in a structure
-Parameter.na = 1;           % 1kmol/s ammonia fuel flow
+%%%%% Define some parameters of the gas turbine powerplant in a structure
 
 % Define atmospheric conditions
 p_atm = 1.000;                   % Atmospheric pressure in bar
 t_atm = 293.13;                  % Atmospheric pressure in Kelvin
-
-
 
 ER_min = 0.765;
 ER_max = 1.0125;
@@ -68,7 +67,8 @@ ER_max = 1.0125;
 % INITIAL CONDITIONS
 %--------------------------------------------------------------------------
 % Initialise stage 1 variables
-n1 = 4; % 1 kmol/s
+n1 = 1; % 41 kmol/s steady state, 60 kmol max power
+%n1 = 82;
 p1 = p_atm;
 t1 = t_atm;
 v1 = 8315*t1*n1/p1/10^5; %m3
@@ -77,6 +77,9 @@ h1 = n1*findProperty(Data.O2,t1,'Dh');
 % Add to the State array
 State(1,:) = [1 n1 p1 t1 h1 v1];
 
+StochioRatio = 4/3;
+ER = 0.6;
+Parameter.na = ER * StochioRatio * n1 * 0.2;
 
 
 % INLET
