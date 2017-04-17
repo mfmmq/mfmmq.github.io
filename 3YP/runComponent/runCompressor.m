@@ -5,8 +5,8 @@ function [State] = runCompressor(State,Parameter,Constant,Data)
 
 % COMPRESSOR MODEL DEFINITION
 %--------------------------------------------------------------------------
-Nu_c = 0.87;    % Isentropic efficiency
-CPR = 20;       % Pressure ratio
+Nu_c = 0.85;    % Isentropic efficiency
+CPR = 15;       % Pressure ratio
 
 
 
@@ -34,8 +34,10 @@ p3 = p2 * CPR; % New pressure defined by compressor pressure ratio
 cp = 0.8*findProperty(Data.O2,t2,'cp')+0.2*findProperty(Data.N2,t2,'cp');
 
 % Calculate isenthalpic efficiency
-[Nu_c,N] = calculateCompressor(State,1);
+%[Nu_c,N] = calculateCompressor(State,1);
 % Save rotational speed in parameter
+N = 3000;
+Nu_c = 0.85;
 Parameter.N = N;
 
 
@@ -57,10 +59,11 @@ h3_meas = n3*findProperty(Data.O2,t3,'Dh');
 Margin = h3-h3_meas;
 if abs(Margin) < abs(w23)*0.1
     fprintf('Compressor successful\r');
-    fprintf('\tIsentropic efficiency is %.4f\r',Nu_c);
-    fprintf('\tShaft rotational speed is %i rad/s\r',N);
-    fprintf('\tCalculated and tabulated enthalpy margin is %d kJ\r', Margin');
-    fprintf('\tCompressor work done %d kJ\r\n',w23);
+    fprintf('\tTemperature at outlet is %.0f K\r',t3);
+    %fprintf('\tIsentropic efficiency is %.4f\r',Nu_c);
+    %fprintf('\tShaft rotational speed is %i rad/s\r',N);
+    fprintf('\tCalculated and tabulated enthalpy margin is %.3f MJ\r', Margin/1000');
+    fprintf('\tCompressor work done %.3f MJ\r\n',w23/1000);
 else
     fprintf('Compressor calculated and tabulated enthalpy at Stage3 ');
     fprintf('inconsistent, margin %d\r\n',Margin);

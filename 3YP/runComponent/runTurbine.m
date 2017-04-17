@@ -5,7 +5,7 @@ function [State] = runTurbine(State,Parameter,Constant,Data)
 
 % TURBINE MODEL DEFINITION
 %--------------------------------------------------------------------------
-Nu_t = 0.9;             % Isentropic efficiency
+Nu_t = 0.86;             % Isentropic efficiency
 p5 = State(1,3);        % Exit pressure will be atmospheric, need to calculate flow rate
 
 
@@ -51,8 +51,6 @@ t5 = t4 - w45/cp_n;
 
 
 
-
-
 %CHECKS
 %--------------------------------------------------------------------------
 % Use findProperties to see if enthalpy is reasonable
@@ -65,8 +63,8 @@ h5_meas = n_NH3*h5_NH3 + n_N2*h5_N2 + n_O2*h5_O2 + n_H2O*h5_H2O;
 Margin = h5-h5_meas;
 if abs(Margin) < abs(w45*0.2)
     fprintf('Turbine successful\r');
-    fprintf('\tCalculated and tabulated enthalpy margin is %d kJ\r', Margin');
-    fprintf('\tTurbine work done %d\r\n',w45);
+    fprintf('\tCalculated and tabulated enthalpy margin is %.3f MJ\r', Margin/1000');
+    fprintf('\tTurbine work done %.3f MJ\r\n',w45/1000);
 else
     fprintf('Turbine calculated and tabulated enthalpy at Stage5 inconsistent, margin %d\r\n',Margin);
 end

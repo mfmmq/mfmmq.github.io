@@ -6,7 +6,7 @@
 % Find a representation for NOx emissions
 
 
-
+addpath('Data','findValue','runComponent')
 
 % Range of flow allowed through the compressor/turbine is 
 
@@ -67,20 +67,26 @@ ER_max = 1.0125;
 % INITIAL CONDITIONS
 %--------------------------------------------------------------------------
 % Initialise stage 1 variables
-n1 = 1; % 41 kmol/s steady state, 60 kmol max power
+n1 = 3.75*5; % 41 kmol/s steady state, 60 kmol max power
 %n1 = 82;
 p1 = p_atm;
 t1 = t_atm;
 v1 = 8315*t1*n1/p1/10^5; %m3
-h1 = n1*findProperty(Data.O2,t1,'Dh');
+%h1 = n1(0.8*findProperty(Data.0.2*findProperty(Data.O2,t1,'Dh');
+h1 = 0;
+
+StochioRatio = 4/3;
+ER = 1.0;
+%n1 = n1/ER;
+Parameter.na = ER * StochioRatio * n1 * 0.2;
+n1 = n1+Parameter.na;
 
 % Add to the State array
 State(1,:) = [1 n1 p1 t1 h1 v1];
 
-StochioRatio = 4/3;
-ER = 0.6;
-Parameter.na = ER * StochioRatio * n1 * 0.2;
-
+% Print out information
+fprintf('\rTotal flow is %.3f , ammonia flow is %.3f\r',n1,Parameter.na);
+fprintf('Equivalence ratio is %.1f\r\n', ER);
 
 % INLET
 %--------------------------------------------------------------------------
@@ -101,7 +107,7 @@ State = runCompressor(State,Parameter,Constant,Data);
 % COMBUSTION (3-4)
 %--------------------------------------------------------------------------
 % Run the burner
-[State,Parameter] = runBurner(State,Parameter,Constant,Data);
+[State,Parameter] = runAdiabaticBurner(State,Parameter,Constant,Data);
 
 
 
@@ -140,7 +146,22 @@ runHeatExchanger(State,Parameter,Constant,Data);
 %runGenerator();
 w_t = State(4,5) - State(5,5);
 w_c = State(2,5) - State(3,5);
-w_out = w_t + w_c
+w_out = w_t + w_c;
+fprintf('\rNet work output is %.3f MJ\r',w_out/1000);
+fprintf('\tExhaust temp %.0f K\r\n\n',State(5,4));
+
+
+
+% Calculate weights
+
+% For inlet flow
+inlet = State(1,2)*(0.8*N2.MW+0.2*O2.MW);
+outlet = Parameter.n_NH3*NH3.MW + Parameter.n_N2*N2.MW + Parameter.n_O2*O2.MW ...
+    +Parameter.n_H2O*H2O.MW + Parameter.n_H2*H2.MW;
+
+
+
+
 
 
 
