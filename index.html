@@ -1,225 +1,92 @@
-<!DOCTYPE HTML>
-<!--
-	Identity by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
-<html>
-	<head>
-		<title>Muyi Maya Qiu</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<!--[if lte IE 8]><script src="assets/js/html5shiv.js"></script><![endif]-->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="format/bootstrap/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <title>Maya Qiu</title>
+    
+      
+      <style>
+          @font-face {
+            font-family: "AlteHaasGrotesk";
+            src: url("format/font/AlteHaasGrotesk.eot"); /* IE9 Compat Modes */
+            src: url("format/font/AlteHaasGrotesk.eot?#iefix") format('embedded-opentype'), /* IE6-IE8 */
+               url('format/font/AlteHaasGrotesk.woff') format('woff'), /* Modern Browsers */
+               url('format/font/AlteHaasGrotesk.ttf')  format('truetype'), /* Safari, Android, iOS */
+               url('format/font/AlteHaasGrotesk.svg#svgFontName') format('svg'); /* Legacy iOS */
+            font-weight: normal;
+          }
+          h1, h2, h3, h4 {
+              font-family: "AlteHaasGrotesk";
+          }
+          #jumbotron {
+              background-color: #ffff
+          }
         
-        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-        <script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js">
-		$("#card").flip({
-				  trigger: 'manual'
-				});
-                
-		
-		</script>
-        <link rel="stylesheet" href="assets/css/main.css" />
-        <script language="JavaScript" src="assets/js/main.js"></script> 
-		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
-		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+        .nav-link{
+          margin-left: 0px;
+          padding-left: 0px;
+          padding-right: 30px;
+          color: #555555;
+        }
         
-	</head>
-	<body class="is-loading">
+        a.disabled:hover {
+          cursor: default;
+        }
+          
+        .active {
+          color: teal;
+        }
+        
+        p {
+          padding-bottom: 10px;
+        }
+      </style>
+  </head>
+  <body>
+     <div class="jumbotron jumbotron-fluid" style="background-color: white; padding-bottom: 25px">
+       <div class="container">
+        <h1 class="display-4">Maya Qiu</h1>
+        <nav class="nav" style="padding-left: -5px">
+          <a class="nav-link active" href="index.html">Home</a>
+          <a class="nav-link" href="project.html">Projects</a> 
+          <a class="nav-link disabled"> | 
+          <a class="nav-link" href="http://www.linkedin.com/in/mayaqiu">LinkedIn</a>
+          <a class="nav-link" href="https://github.com/mfmmq">Github</a>
+        </nav>
+      </div>
+    </div>
 
-		<!-- Wrapper -->
-			<div id="wrapper">
+    
+    
+    
+     <div class="container">
+      <div class="row">
+        <div class="col">
+        <h4 style="">About</h4>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-9">
+          <p>I am a recent Mechanical Engineering graduate from the Universiity of Oxford, specialising in thermofluids and sustainability. I am interested in solving complex problems, especially by data-driven analysis. Outside of work, my hobbies include cycling, music, and art.     
+          </p>
+        </div>
+      </div>
+    </div>
+    
 
-				<!-- Main -->
-					<section id="main">
-						<div id="card1">
-								<header>
-									<span class="avatar"><img src="images/avatar.jpg" alt="" /></span>
-									<h1>Muyi Maya Qiu</h1>
-									<p> <a href="mailto:maya@mqiu.uk">maya@mqiu.uk</a></p>
-								</header>
-								
-								<footer>									
-									<ul class="icons">
-										<li><a href="mailto:maya@mqiu.uk" class="fa-envelope">Email</a></li>
-										<li><a href="#" class="fa-angle-double-down" id="downarrow">Down</a></li>
-										<li><a href="#" class="fa-linkedin" id="linkedin">Linked In</a></li>
-									</ul>
-									<div id="navlink">
-										<a class="navlink_sel" id="navlink_card1">Home</a> | 
-										<a class="navlink" id="navlink_card2">About</a> |
-										<a class="navlink" id="navlink_card3">Currently </a>| 
-										<a class="navlink" id="navlink_card4">Previously </a>| 
-										<a class="navlink" id="navlink_card5">Next </a>
-									</div>
-								</footer>
-						</div>
-						<div id="card2" style="display:none;">
-							About
-							<p class="cardcontent">I am a student, indie movie fan, and runner. <br/><br>This website is hosted on <a href='https://github.com/mfmmq' target='_blank' >Github</a>, which I also use to push changes to the Engineering Society webpage.<br><br> Get in touch with me at <a href='mailto:maya@mqiu.uk'>maya@mqiu.uk</a>. </p>
-							
-							<p></p>
-							<footer>
-								<ul class="icons">
-									<li><a href="#" class="fa-angle-double-up" id="uparrow">Up</a></li>	<li><a href="#" class="fa-angle-double-down" id="downarrow">Down</a></li>
-								</ul>
-								<div id="navlink">
-									<a class="navlink" id="navlink_card1">Home</a> | 
-									<a class="navlink_sel" id="navlink_card2">About</a> |
-									<a class="navlink" id="navlink_card3">Currently </a>| 
-									<a class="navlink" id="navlink_card4">Previously </a>| 
-									<a class="navlink" id="navlink_card5">Next </a>
-								</div>
-							</footer>
-						</div>
-						<div id="card3" style="display:none;">
-							Currently
-							<p class="cardcontent">I am starting my third year studying Engineering Science with an emphasis on Thermodynamics, Software, and Communications. <br><br>
-							This year I will also be continuing as the Oxford University Engineering Society IT Officer and an undergraduate representative working with the Engineering Department board.</p>
-							
-							<p></p>
-							<footer>
-								<ul class="icons">
-									<li><a href="#" class="fa-angle-double-up" id="uparrow">Up</a></li>	<li><a href="#" class="fa-angle-double-down" id="downarrow">Down</a></li>
-								</ul>
-								<div id="navlink">
-									<a class="navlink" id="navlink_card1">Home</a> | 
-									<a class="navlink" id="navlink_card2">About</a> |
-									<a class="navlink_sel" id="navlink_card3">Currently </a>| 
-									<a class="navlink" id="navlink_card4">Previously </a>| 
-									<a class="navlink" id="navlink_card5">Next </a>
-								</div>
-							</footer>
-						</div>
-						<div id="card4" style="display:none;">
-							Previously
-							<p class="cardcontent">Over the summer, I interned at an aerospace company working on engine analysis. <br>I built cases for differences in test engine runs and predicted results by reconciling thousands of data points and parameters. By creating an engine model approximation tool, I improved work flow efficiency and prevented calculation errors.</p>
-							
-							<p></p>
-							<footer>
-								<ul class="icons">
-									<li><a href="#" class="fa-angle-double-up" id="uparrow">Up</a></li>			<li><a href="#" class="fa-angle-double-down" id="downarrow">Down</a></li>
-								</ul>
-								<div id="navlink">
-									<a class="navlink" id="navlink_card1">Home</a> | 
-									<a class="navlink" id="navlink_card2">About</a> |
-									<a class="navlink" id="navlink_card3">Currently </a>| 
-									<a class="navlink_sel" id="navlink_card4">Previously </a>| 
-									<a class="navlink" id="navlink_card5">Next </a>
-								</div>
-							</footer>
-						</div>
-						<div id="card5" style="display:none;">
-							Next
-							<p class="cardcontent">I'll be getting my Master of Engineering in June 2018 (currently First Class Honours). I would be interested to chat about any summer or full-time opportunities in the meantime.  </p>
-							
-							<p></p>
-							<footer>
-								<ul class="icons">
-									<li><a href="#" class="fa-angle-double-up" id="uparrow">Up</a></li>			<!--li><a href="#" class="fa-angle-double-down" id="downarrow">Down</a></li-->
-								</ul>
-								<div id="navlink">
-									<a class="navlink" id="navlink_card1">Home</a> | 
-									<a class="navlink" id="navlink_card2">About</a> |
-									<a class="navlink" id="navlink_card3">Currently </a>| 
-									<a class="navlink" id="navlink_card4">Previously </a>| 
-									<a class="navlink_sel" id="navlink_card5">Next </a>
-								</div>
-							</footer>
-						</div>
-					</section>			
+    
+    <footer class="jumbotron jumbotron-fluid" style="background-color: white; margin-top:30px; margin-bottom: 0px;">
+       <div class="container" style="font-size:10px; color: #777777">
+          ------------------------------------------------------------------------<br>
 
-				<!-- Footer -->
-					<footer id="footer">
-						<ul class="copyright">
-							<li>&copy; M. Qiu</li>
-							<li>Last updated 10/10/16</li>
-							<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-						</ul>
-					</footer>
-			</div>
-
-		<!-- Scripts -->
-			<!--[if lte IE 8]><script src="assets/js/respond.min.js"></script><![endif]-->
-			<script>
-                var info_boolean = 1;
-                
-				if ('addEventListener' in window) {
-					window.addEventListener('load', function() { document.body.className = document.body.className.replace(/\bis-loading\b/, ''); });
-					document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
-				}
-				
-				
-                $( "a#downarrow" ).click(function() {
-					var card_a = "#card" + info_boolean.toString();
-					info_boolean = info_boolean + 1;
-					var card_b = "#card" + info_boolean.toString();
-                    $( card_a ).slideUp();
-                    $( card_b ).slideDown();
-					//alert(info_boolean);
-                });
-                
-				$( "a#uparrow" ).click(function() {
-					var card_a = "#card" + info_boolean.toString();
-					info_boolean = info_boolean - 1;
-					var card_b = "#card" + (info_boolean).toString();
-                    $( card_a ).slideUp();
-                    $( card_b ).slideDown();
-					//alert(info_boolean);
-                });
-				
-				$( "a.navlink").click(function() {
-					//alert(event.target.id);
-					var ID_name = event.target.id; 
-					var next_card_number = ID_name.match(/\d$/);
-					var card_a = "#card" + info_boolean.toString();
-					var card_b = "#card" + next_card_number;
-					info_boolean = parseInt( next_card_number );
-					$( card_a ).slideUp();
-                    $( card_b ).slideDown();
-					//alert(info_boolean);
-				})
-                
-			</script>
-
-	</body>
+      </div>
+    </footer>
+    
+  </body>
 </html>
-
-<!-- <hr /> 
-								<h2>Extra Stuff!</h2>
-								<form method="post" action="#">
-									<div class="field">
-										<input type="text" name="name" id="name" placeholder="Name" />
-									</div>
-									<div class="field">
-										<input type="email" name="email" id="email" placeholder="Email" />
-									</div>
-									<div class="field">
-										<div class="select-wrapper">
-											<select name="department" id="department">
-												<option value="">Department</option>
-												<option value="sales">Sales</option>
-												<option value="tech">Tech Support</option>
-												<option value="null">/dev/null</option>
-											</select>
-										</div>
-									</div>
-									<div class="field">
-										<textarea name="message" id="message" placeholder="Message" rows="4"></textarea>
-									</div>
-									<div class="field">
-										<input type="checkbox" id="human" name="human" /><label for="human">I'm a human</label>
-									</div>
-									<div class="field">
-										<label>But are you a robot?</label>
-										<input type="radio" id="robot_yes" name="robot" /><label for="robot_yes">Yes</label>
-										<input type="radio" id="robot_no" name="robot" /><label for="robot_no">No</label>
-									</div>
-									<ul class="actions">
-										<li><a href="#" class="button">Get Started</a></li>
-									</ul>
-								</form>
-								<hr />
-								-->
