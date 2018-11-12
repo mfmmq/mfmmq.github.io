@@ -1,0 +1,5 @@
+/home/muyi/Documents/CS/Exercise5/MagicDictionary/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/home/muyi/Documents/CS/Exercise5/MagicDictionary/bin/Debug/MagicDictionary.exe.mdb
+/home/muyi/Documents/CS/Exercise5/MagicDictionary/bin/Debug/MagicDictionary.exe
+/home/muyi/Documents/CS/Exercise5/MagicDictionary/obj/x86/Debug/MagicDictionary.exe
+/home/muyi/Documents/CS/Exercise5/MagicDictionary/obj/x86/Debug/MagicDictionary.exe.mdb
