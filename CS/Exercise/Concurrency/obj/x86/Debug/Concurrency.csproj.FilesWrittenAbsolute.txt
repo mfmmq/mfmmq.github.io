@@ -1,5 +1,0 @@
-/home/muyi/Documents/CS/Exercise/Concurrency/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
-/home/muyi/Documents/CS/Exercise/Concurrency/bin/Debug/Concurrency.exe.mdb
-/home/muyi/Documents/CS/Exercise/Concurrency/bin/Debug/Concurrency.exe
-/home/muyi/Documents/CS/Exercise/Concurrency/obj/x86/Debug/Concurrency.exe
-/home/muyi/Documents/CS/Exercise/Concurrency/obj/x86/Debug/Concurrency.exe.mdb

@@ -1,5 +1,0 @@
-/home/muyi/Documents/CS/Exercise/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
-/home/muyi/Documents/CS/Exercise/bin/Debug/Exercise.exe.mdb
-/home/muyi/Documents/CS/Exercise/bin/Debug/Exercise.exe
-/home/muyi/Documents/CS/Exercise/obj/x86/Debug/Exercise.exe
-/home/muyi/Documents/CS/Exercise/obj/x86/Debug/Exercise.exe.mdb
