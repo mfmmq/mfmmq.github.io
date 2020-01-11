@@ -56,7 +56,7 @@ body {
 }
 
 .nav-link {
-  font-size: 24px
+  font-size: 27px
 }
 
 .slow-spin {
@@ -137,4 +137,8 @@ body {
     -webkit-transform: scale(1);
     transform: scale(1);
   }
+}
+
+.vh {
+  height: 23vh;
 }
