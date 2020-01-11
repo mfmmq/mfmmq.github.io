@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="static/format/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="static/format/main.css">
+    <title>Somnilopy</title>
+    <style>
+      @font-face {
+      font-family: "AlteHaasGrotesk";
+      src: url("static/format/font/AlteHaasGrotesk.eot"); /* IE9 Compat Modes */
+      src: url("static/format/font/AlteHaasGrotesk.eot?#iefix") format('embedded-opentype'), /* IE6-IE8 */
+      url('static/format/font/AlteHaasGrotesk.woff') format('woff'), /* Modern Browsers */
+      url('static/format/font/AlteHaasGrotesk.ttf')  format('truetype'), /* Safari, Android, iOS */
+      url('static/format/font/AlteHaasGrotesk.svg#svgFontName') format('svg'); /* Legacy iOS */
+      font-weight: normal;
+      }
+    </style>
+  </head>
+  <body>    
+    <div class="jumbotron jumbotron-fluid" style="background-color: white; padding-bottom: 0px">
+      <div class="container" style="padding-bottom:20px">
+        <div class="row">
+          <div class="col-sm-9" style="width: 130px">
+            <font style="font-size:20px">Somnilopy</font>
+          </div>
+          <div class="col-sm-1">toggle</div>
+          <div class="col-sm-1 recording-status" id='recording-status'>
+            <a class="recording-status" id='recording-toggle-link'>
+              <i id='recording-icon-off' class="fa fa-microphone-slash recording-icon off" style="display: block;"></i>
+              <i id='recording-icon-on' class="fa fa-microphone recording-icon on" style="display: none;"></i>
+            </a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-10">
+            <nav class="nav">
+              <a class="nav-link" href="index.html">Overview</a>
+              <a class="nav-link active" href="settings.html">Settings</a>
+              <a class="nav-link disabled"> | </a>
+              <a class="nav-link" href="https://mqiu.io" target="_blank">mqiu.io</a>
+              <a class="nav-link" href="https://github.com/mfmmq/somnilopy" target="_blank">Github</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col message" style='padding-top: 30px; display: none' id="error-message">
+            Could not get settings. Is the server running?
+          </div>
+        </div>
+      </div>
+      <div class="container" style="min-height: 100px" id="container-somnilopy">
+        <div class="row">
+          <div class="col">My Col</div>
+        </div>
+      </div>
+    </div>
+    <footer class="jumbotron jumbotron-fluid" style="background-color: white; margin-top:30px; margin-bottom: 0px;">
+      <div class="container" style="font-size:10px; color: #777777">
+        ------------------------------------------------------------------------<br>
+      </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="static/moment.js"></script>
+    <script src="static/format/chart.min.js"></script>
+    <script src="static/format/howler.js"></script>
+    <script src="static/sleeptalk.js"></script>
+  </body>
+  
+</html>
